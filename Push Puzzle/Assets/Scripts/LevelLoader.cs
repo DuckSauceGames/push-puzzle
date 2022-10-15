@@ -8,6 +8,7 @@ public class LevelLoader : MonoBehaviour {
 
     public GameObject pushablePrefab;
     public GameObject wallPrefab;
+    public GameObject goalPrefab;
 
     private const string LEVELS_FOLDER = "../assets/levels/";
     private const string LVL_EXTENSION = ".lvl";
@@ -21,16 +22,32 @@ public class LevelLoader : MonoBehaviour {
 
     private GameObject pushables;
     private GameObject walls;
+    private GameObject goals;
+
+    public void ClearLevel() {
+        Destroy(pushables);
+        pushables = new GameObject("Pushables");
+
+        Destroy(walls);
+        walls = new GameObject("Walls");
+
+        Destroy(goals);
+        goals = new GameObject("Goals");
+    }
 
     public void LoadFirstLevel() {
-        pushables = new GameObject("Pushables");
-        pushables.transform.parent = transform;
-
-        walls = new GameObject("Walls");
-        walls.transform.parent = transform;
+        ClearLevel();
 
         currentLevelNumber = 1;
         
+        LoadLVL(currentLevelNumber);
+    }
+
+    public void GoToNextLevel() {
+        ClearLevel();
+
+        currentLevelNumber++;
+
         LoadLVL(currentLevelNumber);
     }
 
@@ -62,6 +79,10 @@ public class LevelLoader : MonoBehaviour {
                             GameObject wall = Instantiate(wallPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
                             wall.transform.parent = walls.transform;
                             break;
+                        case "G":
+                            GameObject goal = Instantiate(goalPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
+                            goal.transform.parent = goals.transform;
+                            break;
                         default:
                             break;
                     }
@@ -83,6 +104,12 @@ public class LevelLoader : MonoBehaviour {
     public void SetWallSprite(Sprite wallSprite) {
         foreach (Transform wall in walls.transform) {
             SetSprite(wallSprite, wall.gameObject);
+        }
+    }
+
+    public void SetGoalSprite(Sprite goalSprite) {
+        foreach (Transform goal in goals.transform) {
+            SetSprite(goalSprite, goal.gameObject);
         }
     }
 
@@ -113,7 +140,6 @@ public class LevelLoader : MonoBehaviour {
     public bool HasPushable(Vector2 position) {
         foreach (Transform pushable in pushables.transform) {
             if (pushable.position.x == position.x && pushable.position.y == position.y) {
-                Debug.Log(position + " has pushable");
                 return true;
             }
         }
@@ -123,6 +149,15 @@ public class LevelLoader : MonoBehaviour {
     public bool HasWall(Vector2 position) {
         foreach (Transform wall in walls.transform) {
             if (wall.position.x == position.x && wall.position.y == position.y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool HasGoal(Vector2 position) {
+        foreach (Transform goal in goals.transform) {
+            if (goal.position.x == position.x && goal.position.y == position.y) {
                 return true;
             }
         }

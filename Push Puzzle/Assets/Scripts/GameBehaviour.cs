@@ -29,6 +29,17 @@ public class GameBehaviour : MonoBehaviour {
         SetSprites();
     }
 
+    public bool IsGoal(Vector2 position) {
+        return levelLoader.HasGoal(position);
+    }
+
+    public void GoToNextLevel() {
+        levelLoader.GoToNextLevel();
+        SetCameraPosition();
+        player.GetComponent<PlayerBehaviour>().SetPosition(levelLoader.GetPlayerStartPosition());
+        SetSprites();
+    }
+
     public bool CanMove(Direction direction, Vector2 targetPosition) {
         if (levelLoader.HasPushable(targetPosition) && !levelLoader.PushableCanMove(direction, targetPosition)) return false;
         return !levelLoader.HasWall(targetPosition);
@@ -50,6 +61,7 @@ public class GameBehaviour : MonoBehaviour {
         levelLoader.SetPushableSprite(spriteLoader.GetPushableSprite());
 
         levelLoader.SetWallSprite(spriteLoader.GetWallSprite());
+        levelLoader.SetGoalSprite(spriteLoader.GetGoalSprite());
     }
 
 }

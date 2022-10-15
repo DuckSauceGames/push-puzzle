@@ -12,12 +12,14 @@ public class SpriteLoader : MonoBehaviour {
     private Sprite pushableSprite;
 
     private Sprite wallSprite;
+    private Sprite goalSprite;
 
     public void LoadSprites() {
         playerSprite = LoadPNG("player");
         pushableSprite = LoadPNG("pushable");
 
         wallSprite = LoadPNG("wall");
+        goalSprite = LoadPNG("goal");
     }
 
     private Sprite LoadPNG(string fileName) {
@@ -45,6 +47,10 @@ public class SpriteLoader : MonoBehaviour {
 
     public Sprite GetWallSprite() {
         return wallSprite;
+    }
+
+    public Sprite GetGoalSprite() {
+        return goalSprite;
     }
  
 }

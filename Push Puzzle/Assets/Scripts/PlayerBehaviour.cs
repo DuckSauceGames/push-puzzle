@@ -48,8 +48,16 @@ public class PlayerBehaviour : MonoBehaviour {
                 transform.position = new Vector3(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), transform.position.z);
                 moving = false;
                 speed = 0f;
+
+                if (gameBehaviour.IsGoal(transform.position)) {
+                    gameBehaviour.GoToNextLevel();
+                }
             }
         }
+    }
+
+    public void SetPosition(Vector2 position) {
+        transform.position = position;
     }
     
     public void SetSprite(Sprite sprite) {
