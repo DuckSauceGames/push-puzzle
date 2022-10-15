@@ -6,6 +6,9 @@ public class GameBehaviour : MonoBehaviour {
 
     public Camera camera;
 
+    public GameObject playerPrefab;
+    private GameObject player;
+
     private SpriteLoader spriteLoader;
     private LevelLoader levelLoader;
 
@@ -19,7 +22,16 @@ public class GameBehaviour : MonoBehaviour {
 
         SetCameraPosition();
 
+        Vector2 playerStartPosition = levelLoader.GetPlayerStartPosition();
+        GameObject player = Instantiate(playerPrefab, playerStartPosition, new Quaternion(0, 0, 0, 0));
+        player.GetComponent<PlayerBehaviour>().SetGameBehaviour(this);
+        player.GetComponent<PlayerBehaviour>().SetSprite(spriteLoader.GetPlayerSprite());
+
         levelLoader.SetWallSprite(spriteLoader.GetWallSprite());
+    }
+
+    public bool CanMove(Vector2 position) {
+        return levelLoader.IsCellEmpty(position);
     }
 
     private void SetCameraPosition() {

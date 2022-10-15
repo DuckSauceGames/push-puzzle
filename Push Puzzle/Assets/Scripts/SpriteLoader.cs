@@ -8,9 +8,13 @@ public class SpriteLoader : MonoBehaviour {
     private const string SPRITES_FOLDER = "../assets/sprites/";
     private const string PNG_EXTENSION = ".png";
 
+    private Sprite playerSprite;
+
     private Sprite wallSprite;
 
     public void LoadSprites() {
+        playerSprite = LoadPNG("player");
+
         wallSprite = LoadPNG("wall");
     }
 
@@ -27,6 +31,10 @@ public class SpriteLoader : MonoBehaviour {
         }
 
         return sprite;
+    }
+
+    public Sprite GetPlayerSprite() {
+        return playerSprite;
     }
 
     public Sprite GetWallSprite() {

@@ -16,6 +16,8 @@ public class LevelLoader : MonoBehaviour {
     private int width;
     private int height;
 
+    private Vector2 playerStartPosition;
+
     private GameObject walls;
 
     public void LoadFirstLevel() {
@@ -44,6 +46,9 @@ public class LevelLoader : MonoBehaviour {
                     char cell = lines[y][x];
 
                     switch (cell.ToString()) {
+                        case "P":
+                            playerStartPosition = new Vector2(x, -y);
+                            break;
                         case "W":
                             GameObject wall = Instantiate(wallPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
                             wall.transform.parent = walls.transform;
@@ -84,6 +89,23 @@ public class LevelLoader : MonoBehaviour {
 
     public int GetLargestDimension() {
         return width > height ? width : height;
+    }
+
+    public Vector2 GetPlayerStartPosition() {
+        return playerStartPosition;
+    }
+
+    public bool IsCellEmpty(Vector2 position) {
+        bool isEmpty = true;
+
+        foreach (Transform wall in walls.transform) {
+            if (wall.position.x == position.x && wall.position.y == position.y) {
+                isEmpty = false;
+                break;
+            }
+        }
+
+        return isEmpty;
     }
 
 }
