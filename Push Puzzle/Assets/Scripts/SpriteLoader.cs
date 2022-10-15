@@ -9,11 +9,13 @@ public class SpriteLoader : MonoBehaviour {
     private const string PNG_EXTENSION = ".png";
 
     private Sprite playerSprite;
+    private Sprite pushableSprite;
 
     private Sprite wallSprite;
 
     public void LoadSprites() {
         playerSprite = LoadPNG("player");
+        pushableSprite = LoadPNG("pushable");
 
         wallSprite = LoadPNG("wall");
     }
@@ -35,6 +37,10 @@ public class SpriteLoader : MonoBehaviour {
 
     public Sprite GetPlayerSprite() {
         return playerSprite;
+    }
+
+    public Sprite GetPushableSprite() {
+        return pushableSprite;
     }
 
     public Sprite GetWallSprite() {

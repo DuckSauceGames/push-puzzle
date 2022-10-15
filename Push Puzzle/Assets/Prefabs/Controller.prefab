@@ -72,4 +72,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94462d102c9a68f4b97ed1bb15d614a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pushablePrefab: {fileID: 5322187686038272007, guid: 85957416a29f478858a209d5850de07d, type: 3}
   wallPrefab: {fileID: 7149279950164332244, guid: 7496aff29ded62f9ca3fa01ec4b84b12, type: 3}

@@ -22,12 +22,25 @@ public class PlayerBehaviour : MonoBehaviour {
         if (!moving) {
             startingPosition = transform.position;
             targetPosition = transform.position;
-            if      (Input.GetKeyDown("w")) targetPosition = transform.position + new Vector3( 0,  1,  0);
-            else if (Input.GetKeyDown("a")) targetPosition = transform.position + new Vector3(-1,  0,  0);
-            else if (Input.GetKeyDown("s")) targetPosition = transform.position + new Vector3( 0, -1,  0);
-            else if (Input.GetKeyDown("d")) targetPosition = transform.position + new Vector3( 1,  0,  0);
+            Direction direction = Direction.UP;
+            if (Input.GetKeyDown("w")) {
+                targetPosition = transform.position + new Vector3( 0,  1,  0);
+                direction = Direction.UP;
+            } else if (Input.GetKeyDown("a")) {
+                targetPosition = transform.position + new Vector3(-1,  0,  0);
+                direction = Direction.LEFT;
+            } else if (Input.GetKeyDown("s")) {
+                targetPosition = transform.position + new Vector3( 0, -1,  0);
+                direction = Direction.DOWN;
+            } else if (Input.GetKeyDown("d")) {
+                targetPosition = transform.position + new Vector3( 1,  0,  0);
+                direction = Direction.RIGHT;
+            }
 
-            if (targetPosition != startingPosition && gameBehaviour.CanMove(targetPosition)) moving = true;
+            if (targetPosition != startingPosition && gameBehaviour.CanMove(direction, targetPosition)) {
+                gameBehaviour.PushPushable(direction, targetPosition);
+                moving = true;
+            }
         } else {
             speed += Time.deltaTime * 2;
             transform.position = Vector3.Lerp(startingPosition, targetPosition, speed);

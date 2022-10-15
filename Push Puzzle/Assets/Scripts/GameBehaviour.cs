@@ -23,21 +23,33 @@ public class GameBehaviour : MonoBehaviour {
         SetCameraPosition();
 
         Vector2 playerStartPosition = levelLoader.GetPlayerStartPosition();
-        GameObject player = Instantiate(playerPrefab, playerStartPosition, new Quaternion(0, 0, 0, 0));
+        player = Instantiate(playerPrefab, playerStartPosition, new Quaternion(0, 0, 0, 0));
         player.GetComponent<PlayerBehaviour>().SetGameBehaviour(this);
-        player.GetComponent<PlayerBehaviour>().SetSprite(spriteLoader.GetPlayerSprite());
 
-        levelLoader.SetWallSprite(spriteLoader.GetWallSprite());
+        SetSprites();
     }
 
-    public bool CanMove(Vector2 position) {
-        return levelLoader.IsCellEmpty(position);
+    public bool CanMove(Direction direction, Vector2 targetPosition) {
+        if (levelLoader.HasPushable(targetPosition) && !levelLoader.PushableCanMove(direction, targetPosition)) return false;
+        return !levelLoader.HasWall(targetPosition);
+    }
+
+    public void PushPushable(Direction direction, Vector2 position) {
+        levelLoader.PushPushable(direction, position);
     }
 
     private void SetCameraPosition() {
         Vector2 levelCenter = levelLoader.GetCenter();
         int largestLevelDimension = levelLoader.GetLargestDimension();
         camera.transform.position = new Vector3(levelCenter.x, levelCenter.y, -largestLevelDimension);
+    }
+
+    private void SetSprites() {
+        player.GetComponent<PlayerBehaviour>().SetSprite(spriteLoader.GetPlayerSprite());
+
+        levelLoader.SetPushableSprite(spriteLoader.GetPushableSprite());
+
+        levelLoader.SetWallSprite(spriteLoader.GetWallSprite());
     }
 
 }

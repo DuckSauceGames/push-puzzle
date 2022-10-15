@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class LevelLoader : MonoBehaviour {
 
+    public GameObject pushablePrefab;
     public GameObject wallPrefab;
 
     private const string LEVELS_FOLDER = "../assets/levels/";
@@ -18,12 +19,16 @@ public class LevelLoader : MonoBehaviour {
 
     private Vector2 playerStartPosition;
 
+    private GameObject pushables;
     private GameObject walls;
 
     public void LoadFirstLevel() {
+        pushables = new GameObject("Pushables");
+        pushables.transform.parent = transform;
+
         walls = new GameObject("Walls");
         walls.transform.parent = transform;
-        
+
         currentLevelNumber = 1;
         
         LoadLVL(currentLevelNumber);
@@ -49,6 +54,10 @@ public class LevelLoader : MonoBehaviour {
                         case "P":
                             playerStartPosition = new Vector2(x, -y);
                             break;
+                        case "p":
+                            GameObject pushable = Instantiate(pushablePrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
+                            pushable.transform.parent = pushables.transform;
+                            break;
                         case "W":
                             GameObject wall = Instantiate(wallPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
                             wall.transform.parent = walls.transform;
@@ -63,6 +72,12 @@ public class LevelLoader : MonoBehaviour {
 
     private void SetSprite(Sprite sprite, GameObject obj) {
         obj.GetComponent<SpriteRenderer>().sprite = sprite;
+    }
+
+    public void SetPushableSprite(Sprite pushableSprite) {
+        foreach (Transform pushable in pushables.transform) {
+            SetSprite(pushableSprite, pushable.gameObject);
+        }
     }
 
     public void SetWallSprite(Sprite wallSprite) {
@@ -95,17 +110,74 @@ public class LevelLoader : MonoBehaviour {
         return playerStartPosition;
     }
 
-    public bool IsCellEmpty(Vector2 position) {
-        bool isEmpty = true;
-
-        foreach (Transform wall in walls.transform) {
-            if (wall.position.x == position.x && wall.position.y == position.y) {
-                isEmpty = false;
-                break;
+    public bool HasPushable(Vector2 position) {
+        foreach (Transform pushable in pushables.transform) {
+            if (pushable.position.x == position.x && pushable.position.y == position.y) {
+                Debug.Log(position + " has pushable");
+                return true;
             }
         }
+        return false;
+    }
 
-        return isEmpty;
+    public bool HasWall(Vector2 position) {
+        foreach (Transform wall in walls.transform) {
+            if (wall.position.x == position.x && wall.position.y == position.y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool HasPushBlocker(Vector2 position) {
+        return HasPushable(position) || HasWall(position);
+    }
+
+    public bool PushableCanMove(Direction direction, Vector2 position) {
+        if (HasPushable(position)) {
+            foreach (Transform pushable in pushables.transform) {
+                if (pushable.position.x == position.x && pushable.position.y == position.y) {
+                    switch (direction) {
+                        case Direction.UP:
+                            return !HasPushBlocker(new Vector2(position.x, position.y + 1));
+                        case Direction.DOWN:
+                            return !HasPushBlocker(new Vector2(position.x, position.y - 1));
+                        case Direction.LEFT:
+                            return !HasPushBlocker(new Vector2(position.x - 1, position.y));
+                        case Direction.RIGHT:
+                            return !HasPushBlocker(new Vector2(position.x + 1, position.y));
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public void PushPushable(Direction direction, Vector2 position) {
+        if (PushableCanMove(direction, position)) {
+            foreach (Transform pushable in pushables.transform) {
+                if (pushable.position.x == position.x && pushable.position.y == position.y) {
+                    switch (direction) {
+                        case Direction.UP:
+                            pushable.gameObject.GetComponent<PushableBehaviour>().Move(new Vector2(position.x, position.y + 1));
+                            break;
+                        case Direction.DOWN:
+                            pushable.gameObject.GetComponent<PushableBehaviour>().Move(new Vector2(position.x, position.y - 1));
+                            break;
+                        case Direction.LEFT:
+                            pushable.gameObject.GetComponent<PushableBehaviour>().Move(new Vector2(position.x - 1, position.y));
+                            break;
+                        case Direction.RIGHT:
+                            pushable.gameObject.GetComponent<PushableBehaviour>().Move(new Vector2(position.x + 1, position.y));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
     }
 
 }
