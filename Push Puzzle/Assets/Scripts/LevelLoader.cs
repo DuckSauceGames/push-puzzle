@@ -16,10 +16,11 @@ public class LevelLoader : MonoBehaviour {
     private int width;
     private int height;
 
-    private List<GameObject> walls;
+    private GameObject walls;
 
     public void LoadFirstLevel() {
-        walls = new List<GameObject>();
+        walls = new GameObject("Walls");
+        walls.transform.parent = transform;
         
         currentLevelNumber = 1;
         
@@ -39,13 +40,13 @@ public class LevelLoader : MonoBehaviour {
             height = Convert.ToInt32(dimensions[1]);
 
             for (int x = 0; x < width; x++) {
-                for (int y = 1; y < height; y++) {
+                for (int y = 1; y < height + 1; y++) {
                     char cell = lines[y][x];
 
                     switch (cell.ToString()) {
                         case "W":
-                            GameObject wall = Instantiate(wallPrefab, new Vector2(0, 0), new Quaternion(0, 0, 0, 0));
-                            walls.Add(wall);
+                            GameObject wall = Instantiate(wallPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
+                            wall.transform.parent = walls.transform;
                             break;
                         default:
                             break;
@@ -56,15 +57,33 @@ public class LevelLoader : MonoBehaviour {
     }
 
     private void SetSprite(Sprite sprite, GameObject obj) {
-        Transform spriteTransform = obj.transform.Find("Sprite");
-        spriteTransform.gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
-        spriteTransform.position += new Vector3(20, 20, 0);
+        obj.GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
     public void SetWallSprite(Sprite wallSprite) {
-        foreach (GameObject wall in walls) {
-            SetSprite(wallSprite, wall);
+        foreach (Transform wall in walls.transform) {
+            SetSprite(wallSprite, wall.gameObject);
         }
+    }
+
+    public Vector2 GetCenter() {
+        float minX = 1000f;
+        float maxX = 0f;
+        float minY = 1000f;
+        float maxY = 0f;
+
+        foreach (Transform wall in walls.transform) {
+            if (wall.position.x < minX) minX = wall.position.x;
+            if (wall.position.x > maxX) maxX = wall.position.x;
+            if (wall.position.y < minY) minY = wall.position.y;
+            if (wall.position.y > maxY) maxY = wall.position.y;
+        }
+
+        return new Vector2((minX + maxX) / 2, (minY + maxY) / 2);
+    }
+
+    public int GetLargestDimension() {
+        return width > height ? width : height;
     }
 
 }
