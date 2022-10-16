@@ -38,8 +38,16 @@ public class GameBehaviour : MonoBehaviour {
         return levelLoader.HasGoal(position);
     }
 
+    public bool IsPush(Vector2 position) {
+        return levelLoader.HasPush(position);
+    }
+
     public bool IsThrow(Vector2 position) {
         return levelLoader.HasThrow(position);
+    }
+
+    public Vector2 GetPushTarget(Vector2 position) {
+        return levelLoader.GetPushTarget(position);
     }
 
     public Vector2 GetThrowTarget(Vector2 position) {
@@ -72,6 +80,11 @@ public class GameBehaviour : MonoBehaviour {
         player.GetComponent<PlayerBehaviour>().SetSprite(spriteLoader.GetPlayerSprite());
 
         levelLoader.SetPushableSprite(spriteLoader.GetPushableSprite());
+
+        levelLoader.SetPushUpSprite(spriteLoader.GetPushUpSprite());
+        levelLoader.SetPushDownSprite(spriteLoader.GetPushDownSprite());
+        levelLoader.SetPushRightSprite(spriteLoader.GetPushRightSprite());
+        levelLoader.SetPushLeftSprite(spriteLoader.GetPushLeftSprite());
 
         levelLoader.SetThrowUpSprite(spriteLoader.GetThrowUpSprite());
         levelLoader.SetThrowDownSprite(spriteLoader.GetThrowDownSprite());

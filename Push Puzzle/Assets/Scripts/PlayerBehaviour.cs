@@ -51,6 +51,10 @@ public class PlayerBehaviour : MonoBehaviour {
 
                 if (gameBehaviour.IsGoal(transform.position)) {
                     gameBehaviour.GoToNextLevel();
+                } else if (gameBehaviour.IsPush(transform.position)) {
+                    startingPosition = transform.position;
+                    targetPosition = gameBehaviour.GetPushTarget(transform.position);
+                    moving = true;
                 } else if (gameBehaviour.IsThrow(transform.position)) {
                     startingPosition = transform.position;
                     targetPosition = gameBehaviour.GetThrowTarget(transform.position);

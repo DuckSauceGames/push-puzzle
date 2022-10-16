@@ -27,6 +27,12 @@ public class PushableBehaviour : MonoBehaviour {
                 moving = false;
                 speed = 0f;
 
+                if (levelLoader.HasPush(transform.position)) {
+                    startingPosition = transform.position;
+                    targetPosition = levelLoader.GetPushTarget(transform.position);
+                    moving = true;
+                }
+
                 if (levelLoader.HasThrow(transform.position)) {
                     startingPosition = transform.position;
                     targetPosition = levelLoader.GetThrowTarget(transform.position);
