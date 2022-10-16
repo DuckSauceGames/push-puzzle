@@ -54,6 +54,10 @@ public class GameBehaviour : MonoBehaviour {
         return levelLoader.GetThrowTarget(position);
     }
 
+    public Direction GetDirectionalDirection(Vector2 position) {
+        return levelLoader.GetDirectionalDirection(position);
+    }
+
     public void GoToNextLevel() {
         levelLoader.GoToNextLevel();
         SetCameraPosition();
@@ -67,7 +71,7 @@ public class GameBehaviour : MonoBehaviour {
     }
 
     public void PushPushable(Direction direction, Vector2 position) {
-        levelLoader.PushPushable(direction, position);
+        if (levelLoader.HasPushable(position)) levelLoader.PushPushable(direction, position);
     }
 
     private void SetCameraPosition() {

@@ -10,6 +10,7 @@ public class PlayerBehaviour : MonoBehaviour {
 
     private bool moving;
     private float speed;
+    private Direction direction;
     private Vector3 startingPosition;
     private Vector3 targetPosition;
 
@@ -22,7 +23,7 @@ public class PlayerBehaviour : MonoBehaviour {
         if (!moving) {
             startingPosition = transform.position;
             targetPosition = transform.position;
-            Direction direction = Direction.UP;
+            direction = Direction.UP;
             if (Input.GetKeyDown("w")) {
                 targetPosition = transform.position + new Vector3( 0,  1,  0);
                 direction = Direction.UP;
@@ -52,13 +53,25 @@ public class PlayerBehaviour : MonoBehaviour {
                 if (gameBehaviour.IsGoal(transform.position)) {
                     gameBehaviour.GoToNextLevel();
                 } else if (gameBehaviour.IsPush(transform.position)) {
-                    startingPosition = transform.position;
-                    targetPosition = gameBehaviour.GetPushTarget(transform.position);
-                    moving = true;
+                    Direction pushDirection = gameBehaviour.GetDirectionalDirection(transform.position);
+                    Vector2 pushTarget = gameBehaviour.GetPushTarget(transform.position);
+                    if (gameBehaviour.CanMove(pushDirection, pushTarget)) {
+                        startingPosition = transform.position;
+                        targetPosition = pushTarget;
+                        direction = pushDirection;
+                        moving = true;
+                        gameBehaviour.PushPushable(direction, targetPosition);
+                    }
                 } else if (gameBehaviour.IsThrow(transform.position)) {
-                    startingPosition = transform.position;
-                    targetPosition = gameBehaviour.GetThrowTarget(transform.position);
-                    moving = true;
+                    Direction throwDirection = gameBehaviour.GetDirectionalDirection(transform.position);
+                    Vector2 throwTarget = gameBehaviour.GetThrowTarget(transform.position);
+                    if (gameBehaviour.CanMove(throwDirection, throwTarget)) {
+                        startingPosition = transform.position;
+                        targetPosition = throwTarget;
+                        direction = throwDirection;
+                        moving = true;
+                        gameBehaviour.PushPushable(direction, targetPosition);
+                    }
                 }
             }
         }

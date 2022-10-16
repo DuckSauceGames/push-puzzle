@@ -282,7 +282,7 @@ public class LevelLoader : MonoBehaviour {
     }
 
     public bool HasBlocker(Vector2 position) {
-        return HasPushable(position) || HasWall(position) || HasPlayer(position);
+        return HasWall(position) || HasPlayer(position);
     }
 
     public bool HasStopper(Vector2 position) {
@@ -290,21 +290,19 @@ public class LevelLoader : MonoBehaviour {
     }
 
     public bool PushableCanMove(Direction direction, Vector2 position) {
-        if (HasPushable(position)) {
-            foreach (Transform pushable in pushables.transform) {
-                if (pushable.position.x == position.x && pushable.position.y == position.y) {
-                    switch (direction) {
-                        case Direction.UP:
-                            return !HasBlocker(new Vector2(position.x, position.y + 1));
-                        case Direction.DOWN:
-                            return !HasBlocker(new Vector2(position.x, position.y - 1));
-                        case Direction.LEFT:
-                            return !HasBlocker(new Vector2(position.x - 1, position.y));
-                        case Direction.RIGHT:
-                            return !HasBlocker(new Vector2(position.x + 1, position.y));
-                        default:
-                            break;
-                    }
+        foreach (Transform pushable in pushables.transform) {
+            if (pushable.position.x == position.x && pushable.position.y == position.y) {
+                switch (direction) {
+                    case Direction.UP:
+                        return !HasBlocker(new Vector2(position.x, position.y + 1));
+                    case Direction.DOWN:
+                        return !HasBlocker(new Vector2(position.x, position.y - 1));
+                    case Direction.LEFT:
+                        return !HasBlocker(new Vector2(position.x - 1, position.y));
+                    case Direction.RIGHT:
+                        return !HasBlocker(new Vector2(position.x + 1, position.y));
+                    default:
+                        break;
                 }
             }
         }
@@ -370,40 +368,53 @@ public class LevelLoader : MonoBehaviour {
         int x = Mathf.RoundToInt(position.x);
         int y = Mathf.RoundToInt(position.y);
         Vector2 targetPosition = new Vector2(x, y);
+        Vector2 maybeTargetPosition;
         if (HasThrow(position)) {
             foreach (Transform thro in throws.transform) {
                 if (thro.position.x == position.x && thro.position.y == position.y) {
                     switch (thro.gameObject.GetComponent<Directional>().GetDirection()) {
                         case Direction.UP:
                             while (y < 0) {
-                                if (HasBlocker(new Vector2(targetPosition.x, targetPosition.y + 1))) return targetPosition;
+                                maybeTargetPosition = new Vector2(targetPosition.x, targetPosition.y + 1);
+                                if (HasBlocker(maybeTargetPosition)) return targetPosition;
+                                if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 y++;
                                 targetPosition = new Vector2(x, y);
                                 if (HasStopper(targetPosition)) return targetPosition;
+                                if (HasPushable(targetPosition)) return targetPosition;
                             }
                             break;
                         case Direction.DOWN:
                             while (y > -height) {
-                                if (HasBlocker(new Vector2(targetPosition.x, targetPosition.y - 1))) return targetPosition;
+                                maybeTargetPosition = new Vector2(targetPosition.x, targetPosition.y - 1);
+                                if (HasBlocker(maybeTargetPosition)) return targetPosition;
+                                if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 y--;
                                 targetPosition = new Vector2(x, y);
                                 if (HasStopper(targetPosition)) return targetPosition;
+                                if (HasPushable(targetPosition)) return targetPosition;
                             }
                             break;
                         case Direction.LEFT:
                             while (x > 0) {
-                                if (HasBlocker(new Vector2(targetPosition.x - 1, targetPosition.y))) return targetPosition;
+                                maybeTargetPosition = new Vector2(targetPosition.x - 1, targetPosition.y);
+                                if (HasBlocker(maybeTargetPosition)) return targetPosition;
+                                if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 x--;
                                 targetPosition = new Vector2(x, y);
                                 if (HasStopper(targetPosition)) return targetPosition;
+                                if (HasPushable(targetPosition)) return targetPosition;
                             }
                             break;
                         case Direction.RIGHT:
                             while (x < width) {
-                                if (HasBlocker(new Vector2(targetPosition.x + 1, targetPosition.y))) return targetPosition;
+                                maybeTargetPosition = new Vector2(targetPosition.x + 1, targetPosition.y);
+                                if (HasBlocker(maybeTargetPosition)) return targetPosition;
+                                if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 x++;
                                 targetPosition = new Vector2(x, y);
                                 if (HasStopper(targetPosition)) return targetPosition;
+                                if (HasPushable(targetPosition)) return targetPosition;
                             }
                             break;
                         default:
@@ -413,6 +424,18 @@ public class LevelLoader : MonoBehaviour {
             }
         }
         return targetPosition;
+    }
+
+    public Direction GetDirectionalDirection(Vector2 position) {
+        foreach (Transform push in pushes.transform) {
+            if (push.position.x == position.x && push.position.y == position.y) return push.gameObject.GetComponent<Directional>().GetDirection();
+        }
+
+        foreach (Transform thro in throws.transform) {
+            if (thro.position.x == position.x && thro.position.y == position.y) return thro.gameObject.GetComponent<Directional>().GetDirection();
+        }
+
+        return Direction.UP;
     }
 
 }
