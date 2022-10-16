@@ -75,3 +75,4 @@ MonoBehaviour:
   pushablePrefab: {fileID: 5322187686038272007, guid: 85957416a29f478858a209d5850de07d, type: 3}
   wallPrefab: {fileID: 7149279950164332244, guid: 7496aff29ded62f9ca3fa01ec4b84b12, type: 3}
   goalPrefab: {fileID: 496751524798508162, guid: 637dd54c188dfe5e6b10dbff9b07a0ef, type: 3}
+  throwPrefab: {fileID: 8087271872017434423, guid: c20eebc674474ead9b5098013baa615e, type: 3}

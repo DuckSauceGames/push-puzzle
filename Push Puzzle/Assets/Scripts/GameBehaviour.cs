@@ -15,6 +15,7 @@ public class GameBehaviour : MonoBehaviour {
     void Start() {
         spriteLoader = transform.GetComponent<SpriteLoader>();
         levelLoader = transform.GetComponent<LevelLoader>();
+        levelLoader.SetGameBehaviour(this);
 
         spriteLoader.LoadSprites();
 
@@ -29,8 +30,20 @@ public class GameBehaviour : MonoBehaviour {
         SetSprites();
     }
 
+    public Vector2 GetPlayerPosition() {
+        return player.GetComponent<PlayerBehaviour>().GetPosition();
+    }
+
     public bool IsGoal(Vector2 position) {
         return levelLoader.HasGoal(position);
+    }
+
+    public bool IsThrow(Vector2 position) {
+        return levelLoader.HasThrow(position);
+    }
+
+    public Vector2 GetThrowTarget(Vector2 position) {
+        return levelLoader.GetThrowTarget(position);
     }
 
     public void GoToNextLevel() {
@@ -59,6 +72,11 @@ public class GameBehaviour : MonoBehaviour {
         player.GetComponent<PlayerBehaviour>().SetSprite(spriteLoader.GetPlayerSprite());
 
         levelLoader.SetPushableSprite(spriteLoader.GetPushableSprite());
+
+        levelLoader.SetThrowUpSprite(spriteLoader.GetThrowUpSprite());
+        levelLoader.SetThrowDownSprite(spriteLoader.GetThrowDownSprite());
+        levelLoader.SetThrowRightSprite(spriteLoader.GetThrowRightSprite());
+        levelLoader.SetThrowLeftSprite(spriteLoader.GetThrowLeftSprite());
 
         levelLoader.SetWallSprite(spriteLoader.GetWallSprite());
         levelLoader.SetGoalSprite(spriteLoader.GetGoalSprite());

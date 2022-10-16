@@ -51,6 +51,10 @@ public class PlayerBehaviour : MonoBehaviour {
 
                 if (gameBehaviour.IsGoal(transform.position)) {
                     gameBehaviour.GoToNextLevel();
+                } else if (gameBehaviour.IsThrow(transform.position)) {
+                    startingPosition = transform.position;
+                    targetPosition = gameBehaviour.GetThrowTarget(transform.position);
+                    moving = true;
                 }
             }
         }
@@ -58,6 +62,10 @@ public class PlayerBehaviour : MonoBehaviour {
 
     public void SetPosition(Vector2 position) {
         transform.position = position;
+    }
+
+    public Vector2 GetPosition() {
+        return targetPosition;
     }
     
     public void SetSprite(Sprite sprite) {

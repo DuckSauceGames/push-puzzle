@@ -11,12 +11,22 @@ public class SpriteLoader : MonoBehaviour {
     private Sprite playerSprite;
     private Sprite pushableSprite;
 
+    private Sprite throwUpSprite;
+    private Sprite throwDownSprite;
+    private Sprite throwRightSprite;
+    private Sprite throwLeftSprite;
+
     private Sprite wallSprite;
     private Sprite goalSprite;
 
     public void LoadSprites() {
         playerSprite = LoadPNG("player");
         pushableSprite = LoadPNG("pushable");
+
+        throwUpSprite = LoadPNG("throw_up");
+        throwDownSprite = LoadPNG("throw_down");
+        throwRightSprite = LoadPNG("throw_right");
+        throwLeftSprite = LoadPNG("throw_left");
 
         wallSprite = LoadPNG("wall");
         goalSprite = LoadPNG("goal");
@@ -43,6 +53,22 @@ public class SpriteLoader : MonoBehaviour {
 
     public Sprite GetPushableSprite() {
         return pushableSprite;
+    }
+
+    public Sprite GetThrowUpSprite() {
+        return throwUpSprite;
+    }
+
+    public Sprite GetThrowDownSprite() {
+        return throwDownSprite;
+    }
+
+    public Sprite GetThrowRightSprite() {
+        return throwRightSprite;
+    }
+
+    public Sprite GetThrowLeftSprite() {
+        return throwLeftSprite;
     }
 
     public Sprite GetWallSprite() {

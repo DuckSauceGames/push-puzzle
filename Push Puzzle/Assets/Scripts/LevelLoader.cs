@@ -6,9 +6,12 @@ using UnityEngine;
 
 public class LevelLoader : MonoBehaviour {
 
+    private GameBehaviour gameBehaviour;
+
     public GameObject pushablePrefab;
     public GameObject wallPrefab;
     public GameObject goalPrefab;
+    public GameObject throwPrefab;
 
     private const string LEVELS_FOLDER = "../assets/levels/";
     private const string LVL_EXTENSION = ".lvl";
@@ -23,6 +26,11 @@ public class LevelLoader : MonoBehaviour {
     private GameObject pushables;
     private GameObject walls;
     private GameObject goals;
+    private GameObject throws;
+
+    public void SetGameBehaviour(GameBehaviour gb) {
+        gameBehaviour = gb;
+    }
 
     public void ClearLevel() {
         Destroy(pushables);
@@ -33,6 +41,9 @@ public class LevelLoader : MonoBehaviour {
 
         Destroy(goals);
         goals = new GameObject("Goals");
+
+        Destroy(throws);
+        throws = new GameObject("Throws");
     }
 
     public void LoadFirstLevel() {
@@ -74,6 +85,7 @@ public class LevelLoader : MonoBehaviour {
                         case "p":
                             GameObject pushable = Instantiate(pushablePrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
                             pushable.transform.parent = pushables.transform;
+                            pushable.GetComponent<PushableBehaviour>().SetLevelLoader(this);
                             break;
                         case "W":
                             GameObject wall = Instantiate(wallPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
@@ -82,6 +94,26 @@ public class LevelLoader : MonoBehaviour {
                         case "G":
                             GameObject goal = Instantiate(goalPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
                             goal.transform.parent = goals.transform;
+                            break;
+                        case "^":
+                            GameObject throwUp = Instantiate(throwPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
+                            throwUp.transform.parent = throws.transform;
+                            throwUp.GetComponent<ThrowBehaviour>().SetDirection(Direction.UP);
+                            break;
+                        case ">":
+                            GameObject throwRight = Instantiate(throwPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
+                            throwRight.transform.parent = throws.transform;
+                            throwRight.GetComponent<ThrowBehaviour>().SetDirection(Direction.RIGHT);
+                            break;
+                        case "V":
+                            GameObject throwDown = Instantiate(throwPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
+                            throwDown.transform.parent = throws.transform;
+                            throwDown.GetComponent<ThrowBehaviour>().SetDirection(Direction.DOWN);
+                            break;
+                        case "<":
+                            GameObject throwLeft = Instantiate(throwPrefab, new Vector2(x, -y), new Quaternion(0, 0, 0, 0));
+                            throwLeft.transform.parent = throws.transform;
+                            throwLeft.GetComponent<ThrowBehaviour>().SetDirection(Direction.LEFT);
                             break;
                         default:
                             break;
@@ -113,6 +145,30 @@ public class LevelLoader : MonoBehaviour {
         }
     }
 
+    public void SetThrowUpSprite(Sprite throwUpSprite) {
+        foreach (Transform thro in throws.transform) {
+            if (thro.gameObject.GetComponent<ThrowBehaviour>().GetDirection() == Direction.UP) SetSprite(throwUpSprite, thro.gameObject);
+        }
+    }
+
+    public void SetThrowDownSprite(Sprite throwDownSprite) {
+        foreach (Transform thro in throws.transform) {
+            if (thro.gameObject.GetComponent<ThrowBehaviour>().GetDirection() == Direction.DOWN) SetSprite(throwDownSprite, thro.gameObject);
+        }
+    }
+
+    public void SetThrowLeftSprite(Sprite throwLeftSprite) {
+        foreach (Transform thro in throws.transform) {
+            if (thro.gameObject.GetComponent<ThrowBehaviour>().GetDirection() == Direction.LEFT) SetSprite(throwLeftSprite, thro.gameObject);
+        }
+    }
+
+    public void SetThrowRightSprite(Sprite throwRightSprite) {
+        foreach (Transform thro in throws.transform) {
+            if (thro.gameObject.GetComponent<ThrowBehaviour>().GetDirection() == Direction.RIGHT) SetSprite(throwRightSprite, thro.gameObject);
+        }
+    }
+
     public Vector2 GetCenter() {
         float minX = 1000f;
         float maxX = 0f;
@@ -137,9 +193,23 @@ public class LevelLoader : MonoBehaviour {
         return playerStartPosition;
     }
 
+    private bool Has(Vector2 position, GameObject parent) {
+        foreach (Transform child in parent.transform) {
+            if (child.position.x == position.x && child.position.y == position.y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool HasPlayer(Vector2 position) {
+        Vector2 playerPosition = gameBehaviour.GetPlayerPosition();
+        return playerPosition.x == position.x && playerPosition.y == position.y;
+    }
+
     public bool HasPushable(Vector2 position) {
         foreach (Transform pushable in pushables.transform) {
-            if (pushable.position.x == position.x && pushable.position.y == position.y) {
+            if (pushable.gameObject.GetComponent<PushableBehaviour>().GetPosition() == position) {
                 return true;
             }
         }
@@ -147,25 +217,19 @@ public class LevelLoader : MonoBehaviour {
     }
 
     public bool HasWall(Vector2 position) {
-        foreach (Transform wall in walls.transform) {
-            if (wall.position.x == position.x && wall.position.y == position.y) {
-                return true;
-            }
-        }
-        return false;
+        return Has(position, walls);
     }
 
     public bool HasGoal(Vector2 position) {
-        foreach (Transform goal in goals.transform) {
-            if (goal.position.x == position.x && goal.position.y == position.y) {
-                return true;
-            }
-        }
-        return false;
+        return Has(position, goals);
     }
 
-    public bool HasPushBlocker(Vector2 position) {
-        return HasPushable(position) || HasWall(position);
+    public bool HasThrow(Vector2 position) {
+        return Has(position, throws);
+    }
+
+    public bool HasBlocker(Vector2 position) {
+        return HasPushable(position) || HasWall(position) || HasPlayer(position);
     }
 
     public bool PushableCanMove(Direction direction, Vector2 position) {
@@ -174,13 +238,13 @@ public class LevelLoader : MonoBehaviour {
                 if (pushable.position.x == position.x && pushable.position.y == position.y) {
                     switch (direction) {
                         case Direction.UP:
-                            return !HasPushBlocker(new Vector2(position.x, position.y + 1));
+                            return !HasBlocker(new Vector2(position.x, position.y + 1));
                         case Direction.DOWN:
-                            return !HasPushBlocker(new Vector2(position.x, position.y - 1));
+                            return !HasBlocker(new Vector2(position.x, position.y - 1));
                         case Direction.LEFT:
-                            return !HasPushBlocker(new Vector2(position.x - 1, position.y));
+                            return !HasBlocker(new Vector2(position.x - 1, position.y));
                         case Direction.RIGHT:
-                            return !HasPushBlocker(new Vector2(position.x + 1, position.y));
+                            return !HasBlocker(new Vector2(position.x + 1, position.y));
                         default:
                             break;
                     }
@@ -210,9 +274,59 @@ public class LevelLoader : MonoBehaviour {
                         default:
                             break;
                     }
+                    break;
                 }
             }
         }
+    }
+
+    public Vector2 GetThrowTarget(Vector2 position) {
+        int x = Mathf.RoundToInt(position.x);
+        int y = Mathf.RoundToInt(position.y);
+        Vector2 targetPosition = new Vector2(x, y);
+        if (HasThrow(position)) {
+            foreach (Transform thro in throws.transform) {
+                if (thro.position.x == position.x && thro.position.y == position.y) {
+                    switch (thro.gameObject.GetComponent<ThrowBehaviour>().GetDirection()) {
+                        case Direction.UP:
+                            while (y < 0) {
+                                if (HasBlocker(new Vector2(targetPosition.x, targetPosition.y + 1))) return targetPosition;
+                                y++;
+                                targetPosition = new Vector2(x, y);
+                                if (HasThrow(targetPosition) || HasGoal(targetPosition)) return targetPosition;
+                            }
+                            break;
+                        case Direction.DOWN:
+                            while (y > -height) {
+                                if (HasBlocker(new Vector2(targetPosition.x, targetPosition.y - 1))) return targetPosition;
+                                y--;
+                                targetPosition = new Vector2(x, y);
+                                if (HasThrow(targetPosition) || HasGoal(targetPosition)) return targetPosition;
+                            }
+                            break;
+                        case Direction.LEFT:
+                            while (x > 0) {
+                                if (HasBlocker(new Vector2(targetPosition.x - 1, targetPosition.y))) return targetPosition;
+                                x--;
+                                targetPosition = new Vector2(x, y);
+                                if (HasThrow(targetPosition) || HasGoal(targetPosition)) return targetPosition;
+                            }
+                            break;
+                        case Direction.RIGHT:
+                            while (x < width) {
+                                if (HasBlocker(new Vector2(targetPosition.x + 1, targetPosition.y))) return targetPosition;
+                                x++;
+                                targetPosition = new Vector2(x, y);
+                                if (HasThrow(targetPosition) || HasGoal(targetPosition)) return targetPosition;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        return targetPosition;
     }
 
 }
