@@ -377,6 +377,7 @@ public class LevelLoader : MonoBehaviour {
                             while (y < 0) {
                                 maybeTargetPosition = new Vector2(targetPosition.x, targetPosition.y + 1);
                                 if (HasBlocker(maybeTargetPosition)) return targetPosition;
+                                if (HasPushable(maybeTargetPosition)) return targetPosition;
                                 if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 y++;
                                 targetPosition = new Vector2(x, y);
@@ -388,6 +389,7 @@ public class LevelLoader : MonoBehaviour {
                             while (y > -height) {
                                 maybeTargetPosition = new Vector2(targetPosition.x, targetPosition.y - 1);
                                 if (HasBlocker(maybeTargetPosition)) return targetPosition;
+                                if (HasPushable(maybeTargetPosition)) return targetPosition;
                                 if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 y--;
                                 targetPosition = new Vector2(x, y);
@@ -399,6 +401,7 @@ public class LevelLoader : MonoBehaviour {
                             while (x > 0) {
                                 maybeTargetPosition = new Vector2(targetPosition.x - 1, targetPosition.y);
                                 if (HasBlocker(maybeTargetPosition)) return targetPosition;
+                                if (HasPushable(maybeTargetPosition)) return targetPosition;
                                 if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 x--;
                                 targetPosition = new Vector2(x, y);
@@ -410,6 +413,7 @@ public class LevelLoader : MonoBehaviour {
                             while (x < width) {
                                 maybeTargetPosition = new Vector2(targetPosition.x + 1, targetPosition.y);
                                 if (HasBlocker(maybeTargetPosition)) return targetPosition;
+                                if (HasPushable(maybeTargetPosition)) return targetPosition;
                                 if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 x++;
                                 targetPosition = new Vector2(x, y);

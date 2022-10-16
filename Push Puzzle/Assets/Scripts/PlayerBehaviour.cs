@@ -55,7 +55,7 @@ public class PlayerBehaviour : MonoBehaviour {
                 } else if (gameBehaviour.IsPush(transform.position)) {
                     Direction pushDirection = gameBehaviour.GetDirectionalDirection(transform.position);
                     Vector2 pushTarget = gameBehaviour.GetPushTarget(transform.position);
-                    if (gameBehaviour.CanMove(pushDirection, pushTarget)) {
+                    if (!(pushTarget.x == transform.position.x && pushTarget.y == transform.position.y) && gameBehaviour.CanMove(pushDirection, pushTarget)) {
                         startingPosition = transform.position;
                         targetPosition = pushTarget;
                         direction = pushDirection;
@@ -65,7 +65,7 @@ public class PlayerBehaviour : MonoBehaviour {
                 } else if (gameBehaviour.IsThrow(transform.position)) {
                     Direction throwDirection = gameBehaviour.GetDirectionalDirection(transform.position);
                     Vector2 throwTarget = gameBehaviour.GetThrowTarget(transform.position);
-                    if (gameBehaviour.CanMove(throwDirection, throwTarget)) {
+                    if (!(throwTarget.x == transform.position.x && throwTarget.y == transform.position.y) && gameBehaviour.CanMove(throwDirection, throwTarget)) {
                         startingPosition = transform.position;
                         targetPosition = throwTarget;
                         direction = throwDirection;
