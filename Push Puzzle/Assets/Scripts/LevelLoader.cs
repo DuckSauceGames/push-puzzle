@@ -257,12 +257,7 @@ public class LevelLoader : MonoBehaviour {
     }
 
     public bool HasPushable(Vector2 position) {
-        foreach (Transform pushable in pushables.transform) {
-            if (pushable.gameObject.GetComponent<PushableBehaviour>().GetPosition() == position) {
-                return true;
-            }
-        }
-        return false;
+        return Has(position, pushables);
     }
 
     public bool HasWall(Vector2 position) {
@@ -281,8 +276,12 @@ public class LevelLoader : MonoBehaviour {
         return Has(position, throws);
     }
 
-    public bool HasBlocker(Vector2 position) {
-        return HasWall(position) || HasPlayer(position);
+    public bool HasPlayerBlocker(Vector2 position) {
+        return HasWall(position);
+    }
+
+    public bool HasPushableBlocker(Vector2 position) {
+        return HasWall(position) || HasPlayer(position) || HasPushable(position);
     }
 
     public bool HasStopper(Vector2 position) {
@@ -309,7 +308,7 @@ public class LevelLoader : MonoBehaviour {
                     default:
                         break;
                 }
-                return !HasBlocker(targetPosition) && !HasPushable(targetPosition);
+                return !HasPushableBlocker(targetPosition);
             }
         }
         return true;
@@ -362,7 +361,7 @@ public class LevelLoader : MonoBehaviour {
                         default:
                             break;
                     }
-                    if (!HasBlocker(targetPosition)) return targetPosition;
+                    if (!HasPushableBlocker(targetPosition)) return targetPosition;
                     return position;
                 }
             }
@@ -382,8 +381,7 @@ public class LevelLoader : MonoBehaviour {
                         case Direction.UP:
                             while (y < 0) {
                                 maybeTargetPosition = new Vector2(targetPosition.x, targetPosition.y + 1);
-                                if (HasBlocker(maybeTargetPosition)) return targetPosition;
-                                if (HasPushable(maybeTargetPosition)) return targetPosition;
+                                if (HasPushableBlocker(maybeTargetPosition)) return targetPosition;
                                 if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 y++;
                                 targetPosition = new Vector2(x, y);
@@ -394,8 +392,7 @@ public class LevelLoader : MonoBehaviour {
                         case Direction.DOWN:
                             while (y > -height) {
                                 maybeTargetPosition = new Vector2(targetPosition.x, targetPosition.y - 1);
-                                if (HasBlocker(maybeTargetPosition)) return targetPosition;
-                                if (HasPushable(maybeTargetPosition)) return targetPosition;
+                                if (HasPushableBlocker(maybeTargetPosition)) return targetPosition;
                                 if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 y--;
                                 targetPosition = new Vector2(x, y);
@@ -406,8 +403,7 @@ public class LevelLoader : MonoBehaviour {
                         case Direction.LEFT:
                             while (x > 0) {
                                 maybeTargetPosition = new Vector2(targetPosition.x - 1, targetPosition.y);
-                                if (HasBlocker(maybeTargetPosition)) return targetPosition;
-                                if (HasPushable(maybeTargetPosition)) return targetPosition;
+                                if (HasPushableBlocker(maybeTargetPosition)) return targetPosition;
                                 if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 x--;
                                 targetPosition = new Vector2(x, y);
@@ -418,8 +414,7 @@ public class LevelLoader : MonoBehaviour {
                         case Direction.RIGHT:
                             while (x < width) {
                                 maybeTargetPosition = new Vector2(targetPosition.x + 1, targetPosition.y);
-                                if (HasBlocker(maybeTargetPosition)) return targetPosition;
-                                if (HasPushable(maybeTargetPosition)) return targetPosition;
+                                if (HasPushableBlocker(maybeTargetPosition)) return targetPosition;
                                 if (HasStopper(maybeTargetPosition) && HasPushable(maybeTargetPosition)) return targetPosition;
                                 x++;
                                 targetPosition = new Vector2(x, y);

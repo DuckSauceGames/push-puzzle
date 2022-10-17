@@ -66,8 +66,11 @@ public class GameBehaviour : MonoBehaviour {
     }
 
     public bool CanMove(Direction direction, Vector2 targetPosition) {
-        if (levelLoader.HasPushable(targetPosition) && !levelLoader.PushableCanMove(direction, targetPosition)) return false;
-        return !levelLoader.HasWall(targetPosition);
+        return !levelLoader.HasPlayerBlocker(targetPosition);
+    }
+
+    public bool PushableCanMove(Direction direction, Vector2 targetPosition) {
+        return levelLoader.PushableCanMove(direction, targetPosition);
     }
 
     public void PushPushable(Direction direction, Vector2 position) {

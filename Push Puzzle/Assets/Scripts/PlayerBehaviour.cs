@@ -38,7 +38,7 @@ public class PlayerBehaviour : MonoBehaviour {
                 direction = Direction.RIGHT;
             }
 
-            if (targetPosition != startingPosition && gameBehaviour.CanMove(direction, targetPosition)) {
+            if (targetPosition != startingPosition && gameBehaviour.CanMove(direction, targetPosition) && gameBehaviour.PushableCanMove(direction, targetPosition)) {
                 gameBehaviour.PushPushable(direction, targetPosition);
                 moving = true;
             }
@@ -52,23 +52,19 @@ public class PlayerBehaviour : MonoBehaviour {
 
                 if (gameBehaviour.IsGoal(transform.position)) {
                     gameBehaviour.GoToNextLevel();
-                } else if (gameBehaviour.IsPush(transform.position)) {
-                    Direction pushDirection = gameBehaviour.GetDirectionalDirection(transform.position);
-                    Vector2 pushTarget = gameBehaviour.GetPushTarget(transform.position);
-                    if (!(pushTarget.x == transform.position.x && pushTarget.y == transform.position.y) && gameBehaviour.CanMove(pushDirection, pushTarget)) {
+                } else if (gameBehaviour.IsPush(transform.position) || gameBehaviour.IsThrow(transform.position)) {
+                    Direction forcedDirection = gameBehaviour.GetDirectionalDirection(transform.position);
+                    Vector2 forcedTarget = transform.position;
+
+                    if (gameBehaviour.IsPush(transform.position))
+                        forcedTarget = gameBehaviour.GetPushTarget(transform.position);
+                    else
+                        forcedTarget = gameBehaviour.GetThrowTarget(transform.position);
+
+                    if (!(forcedTarget == (Vector2) transform.position) && gameBehaviour.CanMove(forcedDirection, forcedTarget)) {
                         startingPosition = transform.position;
-                        targetPosition = pushTarget;
-                        direction = pushDirection;
-                        moving = true;
-                        gameBehaviour.PushPushable(direction, targetPosition);
-                    }
-                } else if (gameBehaviour.IsThrow(transform.position)) {
-                    Direction throwDirection = gameBehaviour.GetDirectionalDirection(transform.position);
-                    Vector2 throwTarget = gameBehaviour.GetThrowTarget(transform.position);
-                    if (!(throwTarget.x == transform.position.x && throwTarget.y == transform.position.y) && gameBehaviour.CanMove(throwDirection, throwTarget)) {
-                        startingPosition = transform.position;
-                        targetPosition = throwTarget;
-                        direction = throwDirection;
+                        targetPosition = forcedTarget;
+                        direction = forcedDirection;
                         moving = true;
                         gameBehaviour.PushPushable(direction, targetPosition);
                     }
