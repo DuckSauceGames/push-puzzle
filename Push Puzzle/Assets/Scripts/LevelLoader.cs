@@ -292,18 +292,24 @@ public class LevelLoader : MonoBehaviour {
     public bool PushableCanMove(Direction direction, Vector2 position) {
         foreach (Transform pushable in pushables.transform) {
             if (pushable.position.x == position.x && pushable.position.y == position.y) {
+                Vector2 targetPosition = position;
                 switch (direction) {
                     case Direction.UP:
-                        return !HasBlocker(new Vector2(position.x, position.y + 1));
+                        targetPosition = new Vector2(position.x, position.y + 1);
+                        break;
                     case Direction.DOWN:
-                        return !HasBlocker(new Vector2(position.x, position.y - 1));
+                        targetPosition = new Vector2(position.x, position.y - 1);
+                        break;
                     case Direction.LEFT:
-                        return !HasBlocker(new Vector2(position.x - 1, position.y));
+                        targetPosition = new Vector2(position.x - 1, position.y);
+                        break;
                     case Direction.RIGHT:
-                        return !HasBlocker(new Vector2(position.x + 1, position.y));
+                        targetPosition = new Vector2(position.x + 1, position.y);
+                        break;
                     default:
                         break;
                 }
+                return !HasBlocker(targetPosition) && !HasPushable(targetPosition);
             }
         }
         return true;
