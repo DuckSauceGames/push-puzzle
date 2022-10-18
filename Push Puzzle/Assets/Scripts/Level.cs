@@ -75,7 +75,7 @@ public class Level : MonoBehaviour {
 
             for (int x = 0; x < width; x++) {
                 for (int y = 2; y < height + 2; y++) {
-                    char cell = lines[y][x];
+                    string cell = lines[y].Split(",")[x].Trim();
                     position = new Vector2(x, -y);
 
                     switch (cell.ToString()) {
@@ -84,22 +84,26 @@ public class Level : MonoBehaviour {
                             player.GetComponent<Pushable>().SetLevel(this);
                             SetSprite(player, sprites.player);
                             break;
+
                         case "p":
                             GameObject pushable = Instantiate(pushablePrefab, position, Quaternion.identity);
                             pushable.transform.parent = pushables.transform;
                             pushable.GetComponent<Pushable>().SetLevel(this);
                             SetSprite(pushable, sprites.pushable);
                             break;
+
                         case "W":
                             GameObject wall = Instantiate(wallPrefab, position, Quaternion.identity);
                             wall.transform.parent = walls.transform;
                             SetSprite(wall, sprites.wall);
                             break;
+
                         case "G":
                             GameObject goal = Instantiate(goalPrefab, position, Quaternion.identity);
                             goal.transform.parent = goals.transform;
                             SetSprite(goal, sprites.goal);
                             break;
+
                         case "U":
                             GameObject pushUp = Instantiate(pushPrefab, position, Quaternion.identity);
                             pushUp.transform.parent = pushes.transform;
@@ -124,6 +128,7 @@ public class Level : MonoBehaviour {
                             pushLeft.GetComponent<Directional>().SetDirection(Direction.LEFT);
                             SetSprite(pushLeft, sprites.pushLeft);
                             break;
+
                         case "^":
                             GameObject throwUp = Instantiate(throwPrefab, position, Quaternion.identity);
                             throwUp.transform.parent = throws.transform;
@@ -148,6 +153,7 @@ public class Level : MonoBehaviour {
                             throwLeft.GetComponent<Directional>().SetDirection(Direction.LEFT);
                             SetSprite(throwLeft, sprites.throwLeft);
                             break;
+
                         default:
                             break;
                     }
@@ -277,7 +283,7 @@ public class Level : MonoBehaviour {
 
                 Vector2 potentialTarget;
 
-                while (distance < maxDistance) {
+                while (distance <= maxDistance) {
                     potentialTarget = GetPosition(position, distance, direction);
 
                     if (HasWall(potentialTarget)) {
