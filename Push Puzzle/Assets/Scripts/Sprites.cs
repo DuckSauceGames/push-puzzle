@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class SpriteLoader : MonoBehaviour {
+public class Sprites : MonoBehaviour {
 
     private const string SPRITES_FOLDER = "../assets/sprites/";
     private const string PNG_EXTENSION = ".png";
 
+    private Level level;
+
     private Sprite playerSprite;
+
     private Sprite pushableSprite;
+
+    private Sprite wallSprite;
+
+    private Sprite goalSprite;
 
     private Sprite pushUpSprite;
     private Sprite pushDownSprite;
@@ -21,12 +28,14 @@ public class SpriteLoader : MonoBehaviour {
     private Sprite throwRightSprite;
     private Sprite throwLeftSprite;
 
-    private Sprite wallSprite;
-    private Sprite goalSprite;
-
     public void LoadSprites() {
         playerSprite = LoadPNG("player");
+
         pushableSprite = LoadPNG("pushable");
+
+        wallSprite = LoadPNG("wall");
+
+        goalSprite = LoadPNG("goal");
 
         pushUpSprite = LoadPNG("push_up");
         pushDownSprite = LoadPNG("push_down");
@@ -37,9 +46,6 @@ public class SpriteLoader : MonoBehaviour {
         throwDownSprite = LoadPNG("throw_down");
         throwRightSprite = LoadPNG("throw_right");
         throwLeftSprite = LoadPNG("throw_left");
-
-        wallSprite = LoadPNG("wall");
-        goalSprite = LoadPNG("goal");
     }
 
     private Sprite LoadPNG(string fileName) {
@@ -57,52 +63,28 @@ public class SpriteLoader : MonoBehaviour {
         return sprite;
     }
 
-    public Sprite GetPlayerSprite() {
-        return playerSprite;
+    public void SetLevel(Level lvl) {
+        level = lvl;
     }
 
-    public Sprite GetPushableSprite() {
-        return pushableSprite;
-    }
+    public void SetSprites() {
+        level.SetPlayerSprite(playerSprite);
 
-    public Sprite GetPushUpSprite() {
-        return pushUpSprite;
-    }
+        level.SetPushableSprite(pushableSprite);
 
-    public Sprite GetPushDownSprite() {
-        return pushDownSprite;
-    }
+        level.SetWallSprite(wallSprite);
 
-    public Sprite GetPushRightSprite() {
-        return pushRightSprite;
-    }
+        level.SetGoalSprite(goalSprite);
 
-    public Sprite GetPushLeftSprite() {
-        return pushLeftSprite;
-    }
+        level.SetPushUpSprite(pushUpSprite);
+        level.SetPushDownSprite(pushDownSprite);
+        level.SetPushRightSprite(pushRightSprite);
+        level.SetPushLeftSprite(pushLeftSprite);
 
-    public Sprite GetThrowUpSprite() {
-        return throwUpSprite;
-    }
-
-    public Sprite GetThrowDownSprite() {
-        return throwDownSprite;
-    }
-
-    public Sprite GetThrowRightSprite() {
-        return throwRightSprite;
-    }
-
-    public Sprite GetThrowLeftSprite() {
-        return throwLeftSprite;
-    }
-
-    public Sprite GetWallSprite() {
-        return wallSprite;
-    }
-
-    public Sprite GetGoalSprite() {
-        return goalSprite;
+        level.SetThrowUpSprite(throwUpSprite);
+        level.SetThrowDownSprite(throwDownSprite);
+        level.SetThrowRightSprite(throwRightSprite);
+        level.SetThrowLeftSprite(throwLeftSprite);
     }
  
 }

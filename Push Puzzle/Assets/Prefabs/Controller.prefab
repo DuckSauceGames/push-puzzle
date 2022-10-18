@@ -47,7 +47,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 0}
-  playerPrefab: {fileID: 4572302787404030975, guid: 2d339a39648da0745a900a95596308f6, type: 3}
 --- !u!114 &6425178565334997803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,6 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94462d102c9a68f4b97ed1bb15d614a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 4572302787404030975, guid: 2d339a39648da0745a900a95596308f6, type: 3}
   pushablePrefab: {fileID: 5322187686038272007, guid: 85957416a29f478858a209d5850de07d, type: 3}
   wallPrefab: {fileID: 7149279950164332244, guid: 7496aff29ded62f9ca3fa01ec4b84b12, type: 3}
   goalPrefab: {fileID: 496751524798508162, guid: 637dd54c188dfe5e6b10dbff9b07a0ef, type: 3}
