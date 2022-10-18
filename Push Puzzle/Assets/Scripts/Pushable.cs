@@ -16,6 +16,7 @@ public class Pushable : MonoBehaviour {
 
     private Vector2 startingPosition;
     private Vector2 targetPosition;
+    private Vector2 oneBeforeTargetPosition;
 
     void Start() {
         targetPosition = IMPOSSIBLE_POSITION;
@@ -27,7 +28,9 @@ public class Pushable : MonoBehaviour {
 
             transform.position = Vector3.Lerp(startingPosition, targetPosition, speed);
 
-            if ((Vector2) transform.position == targetPosition) {
+            if (Mathf.RoundToInt(transform.position.x) == oneBeforeTargetPosition.x && Mathf.RoundToInt(transform.position.y) == oneBeforeTargetPosition.y) {
+                level.MovePushable(targetPosition, direction);
+            } else if ((Vector2) transform.position == targetPosition) {
                 transform.position = new Vector2 (Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
 
                 moving = false;
@@ -57,8 +60,8 @@ public class Pushable : MonoBehaviour {
         if (level.CanMove(position, direction)) {
             startingPosition = transform.position;
             targetPosition = position;
+            oneBeforeTargetPosition = Level.GetPosition(targetPosition, 1, Directions.GetOpposite(direction));
             moving = true;
-            level.MovePushable(targetPosition, direction);
         }
     }
 
