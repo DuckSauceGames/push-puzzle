@@ -6,46 +6,47 @@ using UnityEngine;
 public class Sprites : MonoBehaviour {
 
     private const string SPRITES_FOLDER = "../assets/sprites/";
+    private const string BACKGROUNDS_FOLDER = "backgrounds/";
     private const string PNG_EXTENSION = ".png";
 
-    private Level level;
+    private Sprite background;
 
-    private Sprite playerSprite;
+    public Sprite player { get; protected set; }
 
-    private Sprite pushableSprite;
+    public Sprite pushable { get; protected set; }
 
-    private Sprite wallSprite;
+    public Sprite wall { get; protected set; }
 
-    private Sprite goalSprite;
+    public Sprite goal { get; protected set; }
 
-    private Sprite pushUpSprite;
-    private Sprite pushDownSprite;
-    private Sprite pushRightSprite;
-    private Sprite pushLeftSprite;
+    public Sprite pushUp { get; protected set; }
+    public Sprite pushDown { get; protected set; }
+    public Sprite pushRight { get; protected set; }
+    public Sprite pushLeft { get; protected set; }
 
-    private Sprite throwUpSprite;
-    private Sprite throwDownSprite;
-    private Sprite throwRightSprite;
-    private Sprite throwLeftSprite;
+    public Sprite throwUp { get; protected set; }
+    public Sprite throwDown { get; protected set; }
+    public Sprite throwRight { get; protected set; }
+    public Sprite throwLeft { get; protected set; }
 
     public void LoadSprites() {
-        playerSprite = LoadPNG("player");
+        player = LoadPNG("player");
 
-        pushableSprite = LoadPNG("pushable");
+        pushable = LoadPNG("pushable");
 
-        wallSprite = LoadPNG("wall");
+        wall = LoadPNG("wall");
 
-        goalSprite = LoadPNG("goal");
+        goal = LoadPNG("goal");
 
-        pushUpSprite = LoadPNG("push_up");
-        pushDownSprite = LoadPNG("push_down");
-        pushRightSprite = LoadPNG("push_right");
-        pushLeftSprite = LoadPNG("push_left");
+        pushUp = LoadPNG("push_up");
+        pushDown = LoadPNG("push_down");
+        pushRight = LoadPNG("push_right");
+        pushLeft = LoadPNG("push_left");
 
-        throwUpSprite = LoadPNG("throw_up");
-        throwDownSprite = LoadPNG("throw_down");
-        throwRightSprite = LoadPNG("throw_right");
-        throwLeftSprite = LoadPNG("throw_left");
+        throwUp = LoadPNG("throw_up");
+        throwDown = LoadPNG("throw_down");
+        throwRight = LoadPNG("throw_right");
+        throwLeft = LoadPNG("throw_left");
     }
 
     private Sprite LoadPNG(string fileName) {
@@ -63,28 +64,8 @@ public class Sprites : MonoBehaviour {
         return sprite;
     }
 
-    public void SetLevel(Level lvl) {
-        level = lvl;
-    }
-
-    public void SetSprites() {
-        level.SetPlayerSprite(playerSprite);
-
-        level.SetPushableSprite(pushableSprite);
-
-        level.SetWallSprite(wallSprite);
-
-        level.SetGoalSprite(goalSprite);
-
-        level.SetPushUpSprite(pushUpSprite);
-        level.SetPushDownSprite(pushDownSprite);
-        level.SetPushRightSprite(pushRightSprite);
-        level.SetPushLeftSprite(pushLeftSprite);
-
-        level.SetThrowUpSprite(throwUpSprite);
-        level.SetThrowDownSprite(throwDownSprite);
-        level.SetThrowRightSprite(throwRightSprite);
-        level.SetThrowLeftSprite(throwLeftSprite);
+    public Sprite GetBackground(string fileName) {
+        return LoadPNG(BACKGROUNDS_FOLDER + fileName);
     }
  
 }
