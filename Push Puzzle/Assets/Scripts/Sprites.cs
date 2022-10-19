@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 
 public class Sprites : MonoBehaviour {
@@ -59,6 +60,8 @@ public class Sprites : MonoBehaviour {
             Texture2D tex = new Texture2D(2, 2);
             tex.LoadImage(fileData);
             sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0, 0), 64);
+        } else {
+            throw new FileNotFoundException("Couldn't find sprite", filePath);
         }
 
         return sprite;

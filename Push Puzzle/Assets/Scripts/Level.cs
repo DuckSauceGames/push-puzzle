@@ -69,7 +69,11 @@ public class Level : MonoBehaviour {
             width = Convert.ToInt32(dimensions[0]);
             height = Convert.ToInt32(dimensions[1]);
 
-            game.SetBackground(lines[1]);
+            try {
+                game.SetBackground(lines[1]);
+            } catch {
+                return;
+            }
 
             Vector2 position;
 
@@ -159,6 +163,8 @@ public class Level : MonoBehaviour {
                     }
                 }
             }
+        } else {
+            throw new FileNotFoundException("Couldn't find level", filePath);
         }
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,9 +19,13 @@ public class Game : MonoBehaviour {
         level.game = this;
         level.sprites = sprites;
 
-        sprites.LoadSprites();
-
-        GoToNextLevel();
+        try {
+            sprites.LoadSprites();
+            GoToNextLevel();
+        } catch (FileNotFoundException e) {
+            ShowErrorMessage(e);
+            return;
+        }
     }
 
     void Update() {
@@ -30,7 +35,11 @@ public class Game : MonoBehaviour {
     }
 
     public void GoToNextLevel() {
-        level.GoToNextLevel();
+        try {
+            level.GoToNextLevel();
+        } catch (FileNotFoundException e) {
+            ShowErrorMessage(e);
+        }
         SetCameraPosition();
     }
 
@@ -40,7 +49,18 @@ public class Game : MonoBehaviour {
     }
 
     public void SetBackground(string backgroundName) {
-        canvas.transform.Find("Background").GetComponent<Image>().sprite = sprites.GetBackground(backgroundName);
+        try {
+            canvas.transform.Find("Background").GetComponent<Image>().sprite = sprites.GetBackground(backgroundName);
+        } catch (FileNotFoundException e) {
+            ShowErrorMessage(e);
+            throw e;
+        }
+    }
+
+    private void ShowErrorMessage(FileNotFoundException error) {
+        canvas.transform.Find("Error Message").GetComponent<Text>().text = error.Message + ": " + error.FileName;
+        canvas.transform.Find("Background").GetComponent<Image>().sprite = null;
+        canvas.transform.Find("Background").GetComponent<Image>().color = new Color(0, 0, 0);
     }
 
 }
