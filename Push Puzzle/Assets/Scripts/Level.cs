@@ -181,7 +181,7 @@ public class Level : MonoBehaviour {
             if (wall.position.y > maxY) maxY = wall.position.y;
         }
 
-        return new Vector2((minX + maxX) / 2, (minY + maxY) / 2);
+        return new Vector2(((minX + maxX) / 2) + 0.5f, ((minY + maxY) / 2) - 0.5f);
     }
 
     public int GetLargestDimension() {
