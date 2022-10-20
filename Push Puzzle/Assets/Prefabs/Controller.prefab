@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6511963934492046409}
   - component: {fileID: 6425178565334997803}
   - component: {fileID: 6425178565334997802}
+  - component: {fileID: 2031174950}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -77,3 +78,17 @@ MonoBehaviour:
   goalPrefab: {fileID: 496751524798508162, guid: 637dd54c188dfe5e6b10dbff9b07a0ef, type: 3}
   pushPrefab: {fileID: 640195767063134134, guid: 06c58a6e2c3af48d6b011c9446984149, type: 3}
   throwPrefab: {fileID: 8087271872017434423, guid: c20eebc674474ead9b5098013baa615e, type: 3}
+--- !u!114 &2031174950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6425178565334997806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42cf06201fb4e3f018f0cc1137c24ddc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foregroundCanvas: {fileID: 0}
+  backgroundCanvas: {fileID: 0}

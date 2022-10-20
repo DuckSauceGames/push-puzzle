@@ -87,6 +87,7 @@ public class Level : MonoBehaviour {
                             player = Instantiate(playerPrefab, position, Quaternion.identity);
                             player.GetComponent<Pushable>().SetLevel(this);
                             SetSprite(player, sprites.player);
+                            player.GetComponent<Player>().game = game;
                             break;
 
                         case "p":

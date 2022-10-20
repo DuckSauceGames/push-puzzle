@@ -7,38 +7,58 @@ using UnityEngine.UI;
 public class Game : MonoBehaviour {
 
     public Camera camera;
-    public Canvas canvas;
-
+    
     private Sprites sprites;
     private Level level;
+    private UI ui;
+
+    public bool isPaused { get; private set; }
 
     void Start() {
-        sprites = transform.GetComponent<Sprites>();
-
-        level = transform.GetComponent<Level>();
-        level.game = this;
-        level.sprites = sprites;
+        isPaused = false;
 
         try {
+            ui = transform.GetComponent<UI>();
+            ui.game = this;
+            
+            sprites = transform.GetComponent<Sprites>();
+            ui.sprites = sprites;
             sprites.LoadSprites();
+            ui.SetSprites();
+
+            level = transform.GetComponent<Level>();
+            level.game = this;
+            level.sprites = sprites;
+
             GoToNextLevel();
         } catch (FileNotFoundException e) {
-            ShowErrorMessage(e);
+            ui.ShowException(e);
             return;
         }
     }
 
     void Update() {
+        if (Input.GetKeyDown("escape")) {
+            TogglePause();
+        }
+
         if (level.IsPlayerInGoal()) {
             GoToNextLevel();
         }
+    }
+
+    public void TogglePause() {
+        isPaused = !isPaused;
+        ui.TogglePauseScreenVisibility(isPaused);
+        if (isPaused) Time.timeScale = 0;
+        else Time.timeScale = 1;
     }
 
     public void GoToNextLevel() {
         try {
             level.GoToNextLevel();
         } catch (FileNotFoundException e) {
-            ShowErrorMessage(e);
+            ui.ShowException(e);
         }
         SetCameraPosition();
     }
@@ -50,17 +70,10 @@ public class Game : MonoBehaviour {
 
     public void SetBackground(string backgroundName) {
         try {
-            canvas.transform.Find("Background").GetComponent<Image>().sprite = sprites.GetBackground(backgroundName);
+            ui.SetBackground(backgroundName);
         } catch (FileNotFoundException e) {
-            ShowErrorMessage(e);
             throw e;
         }
-    }
-
-    private void ShowErrorMessage(FileNotFoundException error) {
-        canvas.transform.Find("Error Message").GetComponent<Text>().text = error.Message + ": " + error.FileName;
-        canvas.transform.Find("Background").GetComponent<Image>().sprite = null;
-        canvas.transform.Find("Background").GetComponent<Image>().color = new Color(0, 0, 0);
     }
 
 }

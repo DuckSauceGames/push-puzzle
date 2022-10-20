@@ -7,10 +7,17 @@ using UnityEngine;
 public class Sprites : MonoBehaviour {
 
     private const string SPRITES_FOLDER = "../assets/sprites/";
+
     private const string BACKGROUNDS_FOLDER = "backgrounds/";
+    private const string UI_FOLDER = "ui/";
+
     private const string PNG_EXTENSION = ".png";
 
-    private Sprite background;
+    public Sprite background { get; protected set; }
+    public Sprite pointer { get; protected set; }
+    public Sprite paused { get; protected set; }
+    public Sprite resume { get; protected set; }
+    public Sprite exit { get; protected set; }
 
     public Sprite player { get; protected set; }
 
@@ -31,6 +38,11 @@ public class Sprites : MonoBehaviour {
     public Sprite throwLeft { get; protected set; }
 
     public void LoadSprites() {
+        pointer = LoadPNG(UI_FOLDER + "pointer");
+        paused = LoadPNG(UI_FOLDER + "paused");
+        resume = LoadPNG(UI_FOLDER + "resume");
+        exit = LoadPNG(UI_FOLDER + "exit");
+
         player = LoadPNG("player");
 
         pushable = LoadPNG("pushable");

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
+    public Game game { private get; set; }
+
     private Pushable pushable;
 
     void Start() {
@@ -11,6 +13,8 @@ public class Player : MonoBehaviour {
     }
 
     void Update() {
+        if (game.isPaused) return;
+
         if (Input.GetKeyDown("w")) {
             pushable.Move(Direction.UP, 1);
         } else if (Input.GetKeyDown("a")) {
