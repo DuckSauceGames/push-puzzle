@@ -6,7 +6,9 @@ public class Pushable : MonoBehaviour {
 
     private Vector2 IMPOSSIBLE_POSITION = new Vector2(1000, 1000);
 
-    private Level level;
+    public AnimationGroup animations { private get; set; }
+
+    public Level level { private get; set; }
 
     private float speed = 0f;
 
@@ -36,6 +38,8 @@ public class Pushable : MonoBehaviour {
                 moving = false;
                 speed = 0f;
                 targetPosition = IMPOSSIBLE_POSITION;
+                animations.SetAnimation("idle/" + direction.ToString().ToLower());
+                level.SetIdleAnimation(startingPosition);
             }
         } else {
             if (level.HasPush(transform.position)) {
@@ -44,8 +48,10 @@ public class Pushable : MonoBehaviour {
                 if (level.GetCountTargetingPosition(pushTarget) <= 1) {
                     Move(pushDirection, 1);
                 }
+                level.SetActiveAnimation(transform.position);
             } else if (level.HasThrow(transform.position)) {
                 Move(level.GetDirectionalDirection(transform.position), level.GetThrowDistance(transform.position));
+                level.SetActiveAnimation(transform.position);
             }
         }
     }
@@ -62,11 +68,8 @@ public class Pushable : MonoBehaviour {
             targetPosition = position;
             oneBeforeTargetPosition = Level.GetPosition(targetPosition, 1, Directions.GetOpposite(direction));
             moving = true;
+            animations.SetAnimation("move/" + direction.ToString().ToLower());
         }
-    }
-
-    public void SetLevel(Level lvl) {
-        level = lvl;
     }
 
     public bool IsMoving() {

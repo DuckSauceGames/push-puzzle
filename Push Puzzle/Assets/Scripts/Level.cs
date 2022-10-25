@@ -85,78 +85,101 @@ public class Level : MonoBehaviour {
                     switch (cell.ToString()) {
                         case "P":
                             player = Instantiate(playerPrefab, position, Quaternion.identity);
-                            player.GetComponent<Pushable>().SetLevel(this);
-                            SetSprite(player, sprites.player);
+                            player.AddComponent<AnimationGroup>();
                             player.GetComponent<Player>().game = game;
+                            player.GetComponent<Pushable>().level = this;
+                            player.GetComponent<Pushable>().animations = player.GetComponent<AnimationGroup>();
+                            sprites.LoadAnimations(
+                                player.GetComponent<AnimationGroup>(), "player",
+                                "idle/up", "idle/down", "idle/left", "idle/right",
+                                "move/up", "move/down", "move/left", "move/right",
+                                "reached_goal"
+                            );
                             break;
 
                         case "p":
                             GameObject pushable = Instantiate(pushablePrefab, position, Quaternion.identity);
                             pushable.transform.parent = pushables.transform;
-                            pushable.GetComponent<Pushable>().SetLevel(this);
-                            SetSprite(pushable, sprites.pushable);
+                            pushable.AddComponent<AnimationGroup>();
+                            pushable.GetComponent<Pushable>().level = this;
+                            pushable.GetComponent<Pushable>().animations = pushable.GetComponent<AnimationGroup>();
+                            sprites.LoadAnimations(
+                                pushable.GetComponent<AnimationGroup>(), "pushable",
+                                "idle/up", "idle/down", "idle/left", "idle/right",
+                                "move/up", "move/down", "move/left", "move/right"
+                            );
                             break;
 
                         case "W":
                             GameObject wall = Instantiate(wallPrefab, position, Quaternion.identity);
                             wall.transform.parent = walls.transform;
-                            SetSprite(wall, sprites.wall);
+                            wall.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(wall.GetComponent<AnimationGroup>(), "wall", "normal");
                             break;
 
                         case "G":
                             GameObject goal = Instantiate(goalPrefab, position, Quaternion.identity);
                             goal.transform.parent = goals.transform;
-                            SetSprite(goal, sprites.goal);
+                            goal.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(goal.GetComponent<AnimationGroup>(), "goal", "untouched", "touched");
                             break;
 
                         case "U":
                             GameObject pushUp = Instantiate(pushPrefab, position, Quaternion.identity);
                             pushUp.transform.parent = pushes.transform;
-                            pushUp.GetComponent<Directional>().SetDirection(Direction.UP);
-                            SetSprite(pushUp, sprites.pushUp);
+                            pushUp.GetComponent<Directional>().direction = Direction.UP;
+                            pushUp.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(pushUp.GetComponent<AnimationGroup>(), "push", "idle/up", "active/up");
                             break;
                         case "R":
                             GameObject pushRight = Instantiate(pushPrefab, position, Quaternion.identity);
                             pushRight.transform.parent = pushes.transform;
-                            pushRight.GetComponent<Directional>().SetDirection(Direction.RIGHT);
-                            SetSprite(pushRight, sprites.pushRight);
+                            pushRight.GetComponent<Directional>().direction = Direction.RIGHT;
+                            pushRight.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(pushRight.GetComponent<AnimationGroup>(), "push", "idle/right", "active/right");
                             break;
                         case "D":
                             GameObject pushDown = Instantiate(pushPrefab, position, Quaternion.identity);
                             pushDown.transform.parent = pushes.transform;
-                            pushDown.GetComponent<Directional>().SetDirection(Direction.DOWN);
-                            SetSprite(pushDown, sprites.pushDown);
+                            pushDown.GetComponent<Directional>().direction = Direction.DOWN;
+                            pushDown.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(pushDown.GetComponent<AnimationGroup>(), "push", "idle/down", "active/down");
                             break;
                         case "L":
                             GameObject pushLeft = Instantiate(pushPrefab, position, Quaternion.identity);
                             pushLeft.transform.parent = pushes.transform;
-                            pushLeft.GetComponent<Directional>().SetDirection(Direction.LEFT);
-                            SetSprite(pushLeft, sprites.pushLeft);
+                            pushLeft.GetComponent<Directional>().direction = Direction.LEFT;
+                            pushLeft.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(pushLeft.GetComponent<AnimationGroup>(), "push", "idle/left", "active/left");
                             break;
 
                         case "^":
                             GameObject throwUp = Instantiate(throwPrefab, position, Quaternion.identity);
                             throwUp.transform.parent = throws.transform;
-                            throwUp.GetComponent<Directional>().SetDirection(Direction.UP);
-                            SetSprite(throwUp, sprites.throwUp);
+                            throwUp.GetComponent<Directional>().direction = Direction.UP;
+                            throwUp.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(throwUp.GetComponent<AnimationGroup>(), "throw", "idle/up", "active/up");
                             break;
                         case ">":
                             GameObject throwRight = Instantiate(throwPrefab, position, Quaternion.identity);
                             throwRight.transform.parent = throws.transform;
-                            throwRight.GetComponent<Directional>().SetDirection(Direction.RIGHT);
-                            SetSprite(throwRight, sprites.throwRight);
+                            throwRight.GetComponent<Directional>().direction = Direction.RIGHT;
+                            throwRight.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(throwRight.GetComponent<AnimationGroup>(), "throw", "idle/right", "active/right");
                             break;
                         case "V":
                             GameObject throwDown = Instantiate(throwPrefab, position, Quaternion.identity);
                             throwDown.transform.parent = throws.transform;
-                            throwDown.GetComponent<Directional>().SetDirection(Direction.DOWN);
-                            SetSprite(throwDown, sprites.throwDown);
+                            throwDown.GetComponent<Directional>().direction = Direction.DOWN;
+                            throwDown.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(throwDown.GetComponent<AnimationGroup>(), "throw", "idle/down", "active/down");
                             break;
                         case "<":
                             GameObject throwLeft = Instantiate(throwPrefab, position, Quaternion.identity);
                             throwLeft.transform.parent = throws.transform;
-                            throwLeft.GetComponent<Directional>().SetDirection(Direction.LEFT);
-                            SetSprite(throwLeft, sprites.throwLeft);
+                            throwLeft.GetComponent<Directional>().direction = Direction.LEFT;
+                            throwLeft.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(throwLeft.GetComponent<AnimationGroup>(), "throw", "idle/left", "active/left");
                             break;
 
                         default:
@@ -224,11 +247,11 @@ public class Level : MonoBehaviour {
 
     public Direction GetDirectionalDirection(Vector2 position) {
         foreach (Transform push in pushes.transform) {
-            if (push.position.x == position.x && push.position.y == position.y) return push.gameObject.GetComponent<Directional>().GetDirection();
+            if (push.position.x == position.x && push.position.y == position.y) return push.gameObject.GetComponent<Directional>().direction;
         }
 
         foreach (Transform thro in throws.transform) {
-            if (thro.position.x == position.x && thro.position.y == position.y) return thro.gameObject.GetComponent<Directional>().GetDirection();
+            if (thro.position.x == position.x && thro.position.y == position.y) return thro.gameObject.GetComponent<Directional>().direction;
         }
 
         return Direction.UP;
@@ -266,7 +289,7 @@ public class Level : MonoBehaviour {
     public int GetThrowDistance(Vector2 position) {
         foreach (Transform thro in throws.transform) {
             if ((Vector2) thro.position == position) {
-                Direction direction = thro.gameObject.GetComponent<Directional>().GetDirection();
+                Direction direction = thro.gameObject.GetComponent<Directional>().direction;
                 
                 int maxDistance = 0;
                 switch (direction) {
@@ -341,8 +364,36 @@ public class Level : MonoBehaviour {
         return false;
     }
 
-    private void SetSprite(GameObject obj, Sprite sprite) {
-        obj.GetComponent<SpriteRenderer>().sprite = sprite;
+    public void SetIdleAnimation(Vector2 position) {
+        foreach (Transform push in pushes.transform) {
+            if (push.position.x == position.x && push.position.y == position.y) {
+                push.gameObject.GetComponent<AnimationGroup>().SetAnimation("idle/" + push.gameObject.GetComponent<Directional>().direction.ToString().ToLower());
+                return;
+            }
+        }
+
+        foreach (Transform thro in throws.transform) {
+            if (thro.position.x == position.x && thro.position.y == position.y) {
+                thro.gameObject.GetComponent<AnimationGroup>().SetAnimation("idle/" + thro.gameObject.GetComponent<Directional>().direction.ToString().ToLower());
+                return;
+            }
+        }
+    }
+
+    public void SetActiveAnimation(Vector2 position) {
+        foreach (Transform push in pushes.transform) {
+            if (push.position.x == position.x && push.position.y == position.y) {
+                push.gameObject.GetComponent<AnimationGroup>().SetAnimation("active/" + push.gameObject.GetComponent<Directional>().direction.ToString().ToLower());
+                return;
+            }
+        }
+
+        foreach (Transform thro in throws.transform) {
+            if (thro.position.x == position.x && thro.position.y == position.y) {
+                thro.gameObject.GetComponent<AnimationGroup>().SetAnimation("active/" + thro.gameObject.GetComponent<Directional>().direction.ToString().ToLower());
+                return;
+            }
+        }
     }
 
 }
