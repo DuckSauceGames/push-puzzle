@@ -38,6 +38,11 @@ public class Level : MonoBehaviour {
         LoadLVL(currentLevelNumber);
     }
 
+    public void RestartLevel() {
+        ClearLevel();
+        LoadLVL(currentLevelNumber);
+    }
+
     public void ClearLevel() {
         Destroy(player);
 

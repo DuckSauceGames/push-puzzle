@@ -20,12 +20,14 @@ public class Sprites : MonoBehaviour {
     public Sprite pointer { get; protected set; }
     public Sprite paused { get; protected set; }
     public Sprite resume { get; protected set; }
+    public Sprite restart { get; protected set; }
     public Sprite exit { get; protected set; }
 
     public void LoadSprites() {
         pointer = LoadPNG(UI_FOLDER + "pointer");
         paused = LoadPNG(UI_FOLDER + "paused");
         resume = LoadPNG(UI_FOLDER + "resume");
+        restart = LoadPNG(UI_FOLDER + "restart");
         exit = LoadPNG(UI_FOLDER + "exit");
     }
 

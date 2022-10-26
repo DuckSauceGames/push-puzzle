@@ -63,6 +63,11 @@ public class Game : MonoBehaviour {
         SetCameraPosition();
     }
 
+    public void RestartLevel() {
+        level.RestartLevel();
+        TogglePause();
+    }
+
     private void SetCameraPosition() {
         Vector2 levelCenter = level.GetCenter();
         camera.transform.position = new Vector3(levelCenter.x, levelCenter.y, -level.GetLargestDimension());
