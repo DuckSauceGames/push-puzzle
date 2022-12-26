@@ -1,12 +1,12 @@
 14x10
 sea
-W,W,W,W,W,W,W,W,W,W,W,W,W,W
-W, , , , , , , , , , , , ,W
-W, ,p, ,>, ,p, , , , ,D, ,W
-W, ,p, ,R, ,p, , , , ,D, ,W
-W, , , , , , , ,G, , ,D, ,W
-W, ,p, ,>,p, , ,P,p,R,D, ,W
-W, ,p, ,R,p, , , , ,U,L, ,W
-W, , , , , , , , , , , , ,W
-W, , , , , , , , , , , , ,W
-W,W,W,W,W,W,W,W,W,W,W,W,W,W
+W,W,W,W,W, W,W, W, W, W,W, W,W,W
+W, , , , ,  , ,  ,  ,  , ,  , ,W
+W, ,p, ,>,  ,p,  ,B2,D2, , d, ,W
+W, ,p, ,r,  ,p,  ,  ,  , , d, ,W
+W, , , , ,  , ,  , G,  , , d, ,W
+W, ,p, ,>, p, ,  , P, p,r, d, ,W
+W, ,p, ,r, p, ,B1,  ,  ,u, d, ,W
+W, , , , ,  , , ,  ,  , ,D1, ,W
+W, , , , ,B1, , ,B1,D1, ,  , ,W
+W,W,W,W,W, W,W, W, W, W,W, W,W,W

@@ -20,17 +20,53 @@ public class Level : MonoBehaviour {
     public GameObject goalPrefab;
     public GameObject pushPrefab;
     public GameObject throwPrefab;
+    public GameObject buttonPrefab;
+    public GameObject doorPrefab;
 
     private GameObject pushables;
     private GameObject walls;
     private GameObject goals;
     private GameObject pushes;
     private GameObject throws;
+    private GameObject buttons;
+    private GameObject doors;
 
     private int width;
     private int height;
 
     private int currentLevelNumber = 0;
+
+    void Update() {
+        foreach (Transform door in doors.transform) {
+            Toggleable doorToggleable = door.GetComponent<Toggleable>();
+
+            doorToggleable.active = HasPlayer(door.position) || HasPushable(door.position) || GetCountTargetingPosition(door.position) > 1;
+            if (doorToggleable.active) {
+                door.GetComponent<AnimationGroup>().SetAnimation("open/" + doorToggleable.number);
+            } else {
+                door.GetComponent<AnimationGroup>().SetAnimation("closed/" + doorToggleable.number);
+            }
+        }
+
+        foreach (Transform button in buttons.transform) {
+            Toggleable buttonToggleable = button.GetComponent<Toggleable>();
+
+            buttonToggleable.active = HasPlayer(button.position) || HasPushable(button.position);
+            if (buttonToggleable.active) {
+                button.GetComponent<AnimationGroup>().SetAnimation("pressed/" + buttonToggleable.number);
+
+                foreach (Transform door in doors.transform) {
+                    Toggleable doorToggleable = door.GetComponent<Toggleable>();
+                    if (buttonToggleable.number == doorToggleable.number) {
+                        doorToggleable.active = true;
+                        door.GetComponent<AnimationGroup>().SetAnimation("open/" + doorToggleable.number);
+                    }
+                }
+            } else {
+                button.GetComponent<AnimationGroup>().SetAnimation("unpressed/" + buttonToggleable.number);
+            }
+        }
+    }
 
     public void GoToNextLevel() {
         ClearLevel();
@@ -60,6 +96,12 @@ public class Level : MonoBehaviour {
 
         Destroy(throws);
         throws = new GameObject("Throws");
+
+        Destroy(buttons);
+        buttons = new GameObject("Buttons");
+
+        Destroy(doors);
+        doors = new GameObject("Doors");
     }
 
     private void LoadLVL(int level) {
@@ -84,10 +126,12 @@ public class Level : MonoBehaviour {
 
             for (int x = 0; x < width; x++) {
                 for (int y = 2; y < height + 2; y++) {
-                    string cell = lines[y].Split(",")[x].Trim();
                     position = new Vector2(x, -y);
 
-                    switch (cell.ToString()) {
+                    string cell = lines[y].Split(",")[x].Trim();
+                    if (cell.Length < 1) continue;
+
+                    switch (cell[0].ToString()) {
                         case "P":
                             player = Instantiate(playerPrefab, position, Quaternion.identity);
                             player.AddComponent<AnimationGroup>();
@@ -129,28 +173,28 @@ public class Level : MonoBehaviour {
                             sprites.LoadAnimations(goal.GetComponent<AnimationGroup>(), "goal", "untouched", "touched");
                             break;
 
-                        case "U":
+                        case "u":
                             GameObject pushUp = Instantiate(pushPrefab, position, Quaternion.identity);
                             pushUp.transform.parent = pushes.transform;
                             pushUp.GetComponent<Directional>().direction = Direction.UP;
                             pushUp.AddComponent<AnimationGroup>();
                             sprites.LoadAnimations(pushUp.GetComponent<AnimationGroup>(), "push", "idle/up", "active/up");
                             break;
-                        case "R":
+                        case "r":
                             GameObject pushRight = Instantiate(pushPrefab, position, Quaternion.identity);
                             pushRight.transform.parent = pushes.transform;
                             pushRight.GetComponent<Directional>().direction = Direction.RIGHT;
                             pushRight.AddComponent<AnimationGroup>();
                             sprites.LoadAnimations(pushRight.GetComponent<AnimationGroup>(), "push", "idle/right", "active/right");
                             break;
-                        case "D":
+                        case "d":
                             GameObject pushDown = Instantiate(pushPrefab, position, Quaternion.identity);
                             pushDown.transform.parent = pushes.transform;
                             pushDown.GetComponent<Directional>().direction = Direction.DOWN;
                             pushDown.AddComponent<AnimationGroup>();
                             sprites.LoadAnimations(pushDown.GetComponent<AnimationGroup>(), "push", "idle/down", "active/down");
                             break;
-                        case "L":
+                        case "l":
                             GameObject pushLeft = Instantiate(pushPrefab, position, Quaternion.identity);
                             pushLeft.transform.parent = pushes.transform;
                             pushLeft.GetComponent<Directional>().direction = Direction.LEFT;
@@ -185,6 +229,23 @@ public class Level : MonoBehaviour {
                             throwLeft.GetComponent<Directional>().direction = Direction.LEFT;
                             throwLeft.AddComponent<AnimationGroup>();
                             sprites.LoadAnimations(throwLeft.GetComponent<AnimationGroup>(), "throw", "idle/left", "active/left");
+                            break;
+
+                        case "B":
+                            int buttonNumber = cell[1] - '0';
+                            GameObject button = Instantiate(buttonPrefab, position, Quaternion.identity);
+                            button.transform.parent = buttons.transform;
+                            button.GetComponent<Toggleable>().number = buttonNumber;
+                            button.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(button.GetComponent<AnimationGroup>(), "button", "unpressed/" + buttonNumber, "pressed/" + buttonNumber);
+                            break;
+                        case "D":
+                            int doorNumber = cell[1] - '0';
+                            GameObject door = Instantiate(doorPrefab, position, Quaternion.identity);
+                            door.transform.parent = doors.transform;
+                            door.GetComponent<Toggleable>().number = doorNumber;
+                            door.AddComponent<AnimationGroup>();
+                            sprites.LoadAnimations(door.GetComponent<AnimationGroup>(), "door", "closed/" + doorNumber, "open/" + doorNumber);
                             break;
 
                         default:
@@ -250,6 +311,15 @@ public class Level : MonoBehaviour {
         return Has(position, throws);
     }
 
+    public bool HasClosedDoor(Vector2 position) {
+        foreach (Transform door in doors.transform) {
+            if (door.position.x == position.x && door.position.y == position.y) {
+                return !door.GetComponent<Toggleable>().active;
+            }
+        }
+        return false;
+    }
+
     public Direction GetDirectionalDirection(Vector2 position) {
         foreach (Transform push in pushes.transform) {
             if (push.position.x == position.x && push.position.y == position.y) return push.gameObject.GetComponent<Directional>().direction;
@@ -265,7 +335,7 @@ public class Level : MonoBehaviour {
     public bool CanMove(Vector2 position, Direction direction) {
         if (GetCountTargetingPosition(position) > 1) return false;
         if ((HasPlayer(position) || HasPushable(position)) && !CanMove(GetPosition(position, 1, direction), direction)) return false;
-        return !HasWall(position);
+        return !(HasWall(position) || HasClosedDoor(position));
     }
 
     public void MovePushable(Vector2 position, Direction direction) {

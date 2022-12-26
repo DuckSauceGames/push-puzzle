@@ -7,11 +7,13 @@ The assets used by this game (including images and the levels themselves) are st
 The existing `assets` folder contains complete examples of assets which are ready to be edited and this document contains the information required to customise them fully.
 
 ## Levels
+
 Levels are saved in `assets/levels` and should be named `<level_number>.lvl`. The game will look for and load `1.lvl` first, followed by `2.lvl`, followed by `3.lvl`, and so on.
 
 There is no intended limit to the number of levels the game has, but maybe try to keep it below 2147483647.
 
 ### .lvl
+
 The first line of a .lvl file defines the dimensions of the level. This should be of the form `<wdith>x<height>` e.g. `10x12` means the level is 10 squares in width and 12 squares in height.
 
 The second line of a .lvl file is the name of the background image which should be used by the level. The file extension (e.g. `.png`) should not be included. The background image itself should be stored in `assets/sprites/backgrounds` as a .png.
@@ -20,13 +22,16 @@ The remaining lines of a .lvl file are comma-seperated values of characters (let
 The number of lines and the number of values per line in this section must match the height and width defined in the first line of the file respectively. The characters which can be used and the parts of the level they represent are:
 
 - `P` - Player.
-- `W` - Wall. Cannot be moved and stops other things from moving.
+- `W` - Wall. Cannot be moved and prevents the player and pushables from moving.
 - `p` - Pushable. Can be moved around the level.
 - `G` - Goal. Must be reached by the player to finish the level.
-- `u` `r` `d` `l`- Push (facing up, right, down, or left respectively). Moves anything on top of it one square in the direction it is facing.
+- `u` `r` `d` `l` - Push (facing up, right, down, or left respectively). Moves anything on top of it one square in the direction it is facing.
 - `^` `>` `V` `<` - Throw (facing up, right, down, or left respectively). Moves anything on top of it as many squares as possible in the direction it is facing until something gets in the way.
+- `B1` ... `B9` - Button. Opens doors with a matching number when pressed by the player or a pushable.
+- `D1` ... `D9` - Door. Prevents the player and pushables from moving when closed. Opens when a button with a matching number is pressed. Closes when no buttons with a matching number are pressed and the player and no pushables are inside it.
 
 ## Sprites
+
 Sprites which can be animated should be saved in `assets/sprites/<thing>/<state>/<direction>`, where:
 
 - `<thing>` is what uses these sprites (e.g. `player`).
@@ -38,6 +43,7 @@ An animation for each collection of sprites will be constructed by the game e.g.
 Backgrounds and UI elements are not animated and should be saved in `assets/sprites/backgrounds` and `assets/sprites/ui` respectively.
 
 ### animation.properties
+
 An `animation.properties` file must be included in each sprite folder. This file should contain the properties which tell the game how to use the sprites. Properties should be set one per line with no spaces. If a property is not set it will use a default value defined by the game. The properties which should be included in this file are:
 
 - `numberOfFrames` - The number of frames this animation has. Must be an integer. Default is `0`.

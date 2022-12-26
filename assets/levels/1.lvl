@@ -3,10 +3,10 @@ grass
 W,W, ,W,W,W,W,W,W,W
 W, , , ,>, , ,G, , 
 W,>, ,p, ,P, ,V, ,W
-W, , ,R, ,p,V, , ,W
+W, , ,r, ,p,V, , ,W
 W, , ,>, ,p, ,<,p,W
 W, , , , ,p, , , ,W
-W, ,p,^, ,D, , , ,W
-W, ,D, , , , ,L, ,W
+W, ,p,^, ,d, , , ,W
+W, ,d, , , , ,l, ,W
  , , , , , , , ,<,W
 W,W,W,W,W,W,W, ,W,W
