@@ -391,7 +391,7 @@ public class Level : MonoBehaviour {
                 while (distance <= maxDistance) {
                     potentialTarget = GetPosition(position, distance, direction);
 
-                    if (HasWall(potentialTarget)) {
+                    if (HasWall(potentialTarget) || HasClosedDoor(potentialTarget)) {
                         return distance - 1;
                     } else if (HasGoal(potentialTarget)) {
                         return distance;
