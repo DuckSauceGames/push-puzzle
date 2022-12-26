@@ -1,12 +1,8 @@
-10x10
+7x6
 grass
-W,W, ,W,W,W,W,W,W,W
-W, , , ,>, , ,G, , 
-W,>, ,p, ,P, ,V, ,W
-W, , ,r, ,p,V, , ,W
-W, , ,>, ,p, ,<,p,W
-W, , , , ,p, , , ,W
-W, ,p,^, ,d, , , ,W
-W, ,d, , , , ,l, ,W
- , , , , , , , ,<,W
-W,W,W,W,W,W,W, ,W,W
+W,W, W,W, W,W,W
+W,P,  , ,D1, ,W
+W, ,B1, , W, ,W
+W, , p, , W, ,W
+W, ,  , , W,G,W
+W,W, W,W, W,W,W

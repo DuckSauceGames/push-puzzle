@@ -1,12 +1,9 @@
-14x10
+8x7
 sea
-W,W,W,W,W, W,W, W, W, W, W, W,W,W
-W, , , , ,  , ,  ,  ,  ,  ,  , ,W
-W, ,p, ,>,  ,p,  ,B2,  ,D2, d, ,W
-W, ,p, ,r,  ,p,  ,  ,  ,  , d, ,W
-W, , , , ,  , ,  , G,  ,  , d, ,W
-W, ,p, ,>, p, ,  , P, p, r, d, ,W
-W, ,p, ,r, p, ,B1,  ,  , u, d, ,W
-W, , , , ,  , ,  ,  ,  ,  ,D1, ,W
-W, , , , ,B1, ,  ,B1,D1,  ,  , ,W
-W,W,W,W,W, W,W, W, W, W, W, W,W,W
+W, W,W, W,W,W,W,W
+W, P, ,D1, , ,G,W
+W, p,W, W,W,W,W,W
+W, r,r, r,r,r,d,W
+W, W,W, W,W,W,d,W
+W,B1,l, l,l,l,l,W
+W, W,W, W,W,W,W,W
